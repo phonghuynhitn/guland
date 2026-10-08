@@ -1,0 +1,194 @@
+[
+  {
+    "code": "CLN",
+    "name": "Đất trồng cây lâu năm",
+    "color": "#ffd7aa",
+    "group": "agriculture"
+  },
+  {
+    "code": "BHK",
+    "name": "Đất bằng trồng cây hàng năm khác",
+    "color": "#fff0b4",
+    "group": "agriculture"
+  },
+  {
+    "code": "NTS",
+    "name": "Đất nuôi trồng thủy sản",
+    "color": "#beffff",
+    "group": "agriculture"
+  },
+  {
+    "code": "MNC",
+    "name": "Đất có mặt nước chuyên dùng",
+    "color": "#aaffff",
+    "group": "water"
+  },
+  {
+    "code": "ODT",
+    "name": "Đất ở tại đô thị",
+    "color": "#ffa0ff",
+    "group": "residential"
+  },
+  {
+    "code": "DSH",
+    "name": "Đất sinh hoạt cộng đồng",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "TMD",
+    "name": "Đất thương mại, dịch vụ",
+    "color": "#ffaa64",
+    "group": "commercial"
+  },
+  {
+    "code": "TON",
+    "name": "Đất tôn giáo",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DGT",
+    "name": "Đất giao thông",
+    "color": "#f07900",
+    "group": "transport"
+  },
+  {
+    "code": "TIN",
+    "name": "Đất tín ngưỡng",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "NTD",
+    "name": "Đất nghĩa trang, nghĩa địa",
+    "color": "#d2d2d2",
+    "group": "public"
+  },
+  {
+    "code": "DCH",
+    "name": "Đất chợ",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "TSC",
+    "name": "Đất trụ sở cơ quan, công trình sự nghiệp nhà nước",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "SKC",
+    "name": "Đất cơ sở sản xuất, kinh doanh",
+    "color": "#ffaaa0",
+    "group": "commercial"
+  },
+  {
+    "code": "DTL",
+    "name": "Đất thủy lợi",
+    "color": "#d9ffff",
+    "group": "water"
+  },
+  {
+    "code": "CAN",
+    "name": "Đất an ninh",
+    "color": "#ff4678",
+    "group": "defense"
+  },
+  {
+    "code": "BCS",
+    "name": "Đất bằng chưa sử dụng",
+    "color": "#ffffff",
+    "group": "unused"
+  },
+  {
+    "code": "DYT",
+    "name": "Đất cơ sở y tế",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DGD",
+    "name": "Đất cơ sở giáo dục - đào tạo",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DVH",
+    "name": "Đất cơ sở văn hóa",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "SON",
+    "name": "Đất sông ngòi, kênh, rạch, suối",
+    "color": "#d9ffff",
+    "group": "water"
+  },
+  {
+    "code": "DKH",
+    "name": "Đất cơ sở nghiên cứu khoa học",
+    "color": "#ffd200",
+    "group": "public"
+  },
+  {
+    "code": "CQP",
+    "name": "Đất quốc phòng",
+    "color": "#ff5078",
+    "group": "defense"
+  },
+  {
+    "code": "DKV",
+    "name": "Đất khu vui chơi, giải trí công cộng",
+    "color": "#ffd200",
+    "group": "public"
+  },
+  {
+    "code": "DTS",
+    "name": "Đất xây dựng trụ sở của tổ chức sự nghiệp",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DNL",
+    "name": "Đất công trình năng lượng",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DBV",
+    "name": "Đất công trình bưu chính viễn thông",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DTT",
+    "name": "Đất cơ sở thể dục - thể thao",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DXH",
+    "name": "Đất cơ sở dịch vụ về xã hội",
+    "color": "#ffd200",
+    "group": "public"
+  },
+  {
+    "code": "DCK",
+    "name": "Đất công trình công cộng khác",
+    "color": "#ffaaa0",
+    "group": "public"
+  },
+  {
+    "code": "DRA",
+    "name": "Đất bãi thải, xử lý chất thải",
+    "color": "#cdaacd",
+    "group": "public"
+  },
+  {
+    "code": "PNK",
+    "name": "Đất phi nông nghiệp khác",
+    "color": "#ffaaa0",
+    "group": "public"
+  }
+]

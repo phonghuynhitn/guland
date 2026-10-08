@@ -1,0 +1,705 @@
+{
+  "source": "mock",
+  "listings": [
+    {
+      "id": "cg-001",
+      "lat": 21.040249,
+      "lng": 105.801614,
+      "areaM2": 82,
+      "pricePerM2": 155029987,
+      "type": "dat",
+      "title": "Đất 82 m² Trần Đăng Ninh",
+      "address": "67 Trần Đăng Ninh, Cầu Giấy"
+    },
+    {
+      "id": "cg-002",
+      "lat": 21.035917,
+      "lng": 105.777935,
+      "areaM2": 199,
+      "pricePerM2": 113133984,
+      "type": "dat",
+      "title": "Đất 199 m² Trung Hòa",
+      "address": "68 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-003",
+      "lat": 21.017135,
+      "lng": 105.788113,
+      "areaM2": 100,
+      "pricePerM2": 129679344,
+      "type": "dat",
+      "title": "Đất 100 m² Hoàng Quốc Việt",
+      "address": "67 Hoàng Quốc Việt, Cầu Giấy"
+    },
+    {
+      "id": "cg-004",
+      "lat": 21.043324,
+      "lng": 105.804935,
+      "areaM2": 72,
+      "pricePerM2": 161237499,
+      "type": "nha",
+      "title": "Nhà 72 m² Trần Đăng Ninh",
+      "address": "153 Trần Đăng Ninh, Cầu Giấy"
+    },
+    {
+      "id": "cg-005",
+      "lat": 21.037461,
+      "lng": 105.780779,
+      "areaM2": 152,
+      "pricePerM2": 103350734,
+      "type": "dat",
+      "title": "Đất 152 m² Cầu Giấy",
+      "address": "181 Cầu Giấy, Cầu Giấy"
+    },
+    {
+      "id": "cg-006",
+      "lat": 21.02216,
+      "lng": 105.796877,
+      "areaM2": 61,
+      "pricePerM2": 148279820,
+      "type": "nha",
+      "title": "Nhà 61 m² Hồ Tùng Mậu",
+      "address": "191 Hồ Tùng Mậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-007",
+      "lat": 21.010926,
+      "lng": 105.795629,
+      "areaM2": 101,
+      "pricePerM2": 137523262,
+      "type": "dat",
+      "title": "Đất 101 m² Nguyễn Thị Thập",
+      "address": "68 Nguyễn Thị Thập, Cầu Giấy"
+    },
+    {
+      "id": "cg-008",
+      "lat": 21.014285,
+      "lng": 105.803472,
+      "areaM2": 68,
+      "pricePerM2": 171196160,
+      "type": "nha",
+      "title": "Nhà 68 m² Trung Kính",
+      "address": "80 Trung Kính, Cầu Giấy"
+    },
+    {
+      "id": "cg-009",
+      "lat": 21.042639,
+      "lng": 105.793657,
+      "areaM2": 79,
+      "pricePerM2": 130114791,
+      "type": "nha",
+      "title": "Nhà 79 m² Tô Hiệu",
+      "address": "48 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-010",
+      "lat": 21.016239,
+      "lng": 105.793384,
+      "areaM2": 209,
+      "pricePerM2": 158945908,
+      "type": "dat",
+      "title": "Đất 209 m² Trung Kính",
+      "address": "104 Trung Kính, Cầu Giấy"
+    },
+    {
+      "id": "cg-011",
+      "lat": 21.046941,
+      "lng": 105.79649,
+      "areaM2": 52,
+      "pricePerM2": 144231371,
+      "type": "nha",
+      "title": "Nhà 52 m² Tô Hiệu",
+      "address": "147 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-012",
+      "lat": 21.033087,
+      "lng": 105.778816,
+      "areaM2": 89,
+      "pricePerM2": 127070629,
+      "type": "dat",
+      "title": "Đất 89 m² Nguyễn Thị Thập",
+      "address": "204 Nguyễn Thị Thập, Cầu Giấy"
+    },
+    {
+      "id": "cg-013",
+      "lat": 21.038176,
+      "lng": 105.779541,
+      "areaM2": 75,
+      "pricePerM2": 126208006,
+      "type": "nha",
+      "title": "Nhà 75 m² Hồ Tùng Mậu",
+      "address": "140 Hồ Tùng Mậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-014",
+      "lat": 21.037267,
+      "lng": 105.772001,
+      "areaM2": 189,
+      "pricePerM2": 104855801,
+      "type": "dat",
+      "title": "Đất 189 m² Dịch Vọng Hậu",
+      "address": "62 Dịch Vọng Hậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-015",
+      "lat": 21.045226,
+      "lng": 105.774183,
+      "areaM2": 81,
+      "pricePerM2": 130131625,
+      "type": "nha",
+      "title": "Nhà 81 m² Nguyễn Ngọc Vũ",
+      "address": "16 Nguyễn Ngọc Vũ, Cầu Giấy"
+    },
+    {
+      "id": "cg-016",
+      "lat": 21.005568,
+      "lng": 105.793666,
+      "areaM2": 77,
+      "pricePerM2": 135276434,
+      "type": "dat",
+      "title": "Đất 77 m² Nguyễn Thị Thập",
+      "address": "208 Nguyễn Thị Thập, Cầu Giấy"
+    },
+    {
+      "id": "cg-017",
+      "lat": 21.039266,
+      "lng": 105.772911,
+      "areaM2": 102,
+      "pricePerM2": 103389282,
+      "type": "dat",
+      "title": "Đất 102 m² Trung Hòa",
+      "address": "66 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-018",
+      "lat": 21.042351,
+      "lng": 105.799424,
+      "areaM2": 90,
+      "pricePerM2": 185881956,
+      "type": "nha",
+      "title": "Nhà 90 m² Duy Tân",
+      "address": "124 Duy Tân, Cầu Giấy"
+    },
+    {
+      "id": "cg-019",
+      "lat": 21.030821,
+      "lng": 105.78253,
+      "areaM2": 79,
+      "pricePerM2": 132510971,
+      "type": "nha",
+      "title": "Nhà 79 m² Trần Bình",
+      "address": "159 Trần Bình, Cầu Giấy"
+    },
+    {
+      "id": "cg-020",
+      "lat": 21.012044,
+      "lng": 105.804952,
+      "areaM2": 75,
+      "pricePerM2": 177869776,
+      "type": "nha",
+      "title": "Nhà 75 m² Duy Tân",
+      "address": "120 Duy Tân, Cầu Giấy"
+    },
+    {
+      "id": "cg-021",
+      "lat": 21.0389,
+      "lng": 105.769546,
+      "areaM2": 75,
+      "pricePerM2": 90661156,
+      "type": "dat",
+      "title": "Đất 75 m² Nguyễn Phong Sắc",
+      "address": "75 Nguyễn Phong Sắc, Cầu Giấy"
+    },
+    {
+      "id": "cg-022",
+      "lat": 21.032105,
+      "lng": 105.776005,
+      "areaM2": 59,
+      "pricePerM2": 125560503,
+      "type": "nha",
+      "title": "Nhà 59 m² Hồ Tùng Mậu",
+      "address": "130 Hồ Tùng Mậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-023",
+      "lat": 21.050958,
+      "lng": 105.787827,
+      "areaM2": 72,
+      "pricePerM2": 124032757,
+      "type": "dat",
+      "title": "Đất 72 m² Xuân Thủy",
+      "address": "35 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-024",
+      "lat": 21.009978,
+      "lng": 105.800765,
+      "areaM2": 51,
+      "pricePerM2": 151838756,
+      "type": "nha",
+      "title": "Nhà 51 m² Trần Bình",
+      "address": "200 Trần Bình, Cầu Giấy"
+    },
+    {
+      "id": "cg-025",
+      "lat": 21.044383,
+      "lng": 105.792483,
+      "areaM2": 85,
+      "pricePerM2": 122442722,
+      "type": "nha",
+      "title": "Nhà 85 m² Phạm Tuấn Tài",
+      "address": "52 Phạm Tuấn Tài, Cầu Giấy"
+    },
+    {
+      "id": "cg-026",
+      "lat": 21.034577,
+      "lng": 105.793775,
+      "areaM2": 53,
+      "pricePerM2": 155335993,
+      "type": "nha",
+      "title": "Nhà 53 m² Trung Hòa",
+      "address": "180 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-027",
+      "lat": 21.031321,
+      "lng": 105.794433,
+      "areaM2": 112,
+      "pricePerM2": 139575593,
+      "type": "dat",
+      "title": "Đất 112 m² Hồ Tùng Mậu",
+      "address": "113 Hồ Tùng Mậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-028",
+      "lat": 21.038439,
+      "lng": 105.773151,
+      "areaM2": 52,
+      "pricePerM2": 105000448,
+      "type": "nha",
+      "title": "Nhà 52 m² Xuân Thủy",
+      "address": "129 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-029",
+      "lat": 21.033654,
+      "lng": 105.796194,
+      "areaM2": 82,
+      "pricePerM2": 157960074,
+      "type": "nha",
+      "title": "Nhà 82 m² Duy Tân",
+      "address": "237 Duy Tân, Cầu Giấy"
+    },
+    {
+      "id": "cg-030",
+      "lat": 21.018546,
+      "lng": 105.792531,
+      "areaM2": 195,
+      "pricePerM2": 150342884,
+      "type": "dat",
+      "title": "Đất 195 m² Xuân Thủy",
+      "address": "182 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-031",
+      "lat": 21.03608,
+      "lng": 105.7798,
+      "areaM2": 112,
+      "pricePerM2": 109158033,
+      "type": "dat",
+      "title": "Đất 112 m² Phạm Tuấn Tài",
+      "address": "137 Phạm Tuấn Tài, Cầu Giấy"
+    },
+    {
+      "id": "cg-032",
+      "lat": 21.037788,
+      "lng": 105.769388,
+      "areaM2": 71,
+      "pricePerM2": 77611456,
+      "type": "dat",
+      "title": "Đất 71 m² Xuân Thủy",
+      "address": "97 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-033",
+      "lat": 21.037953,
+      "lng": 105.803243,
+      "areaM2": 76,
+      "pricePerM2": 156529966,
+      "type": "nha",
+      "title": "Nhà 76 m² Xuân Thủy",
+      "address": "40 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-034",
+      "lat": 21.050921,
+      "lng": 105.804418,
+      "areaM2": 113,
+      "pricePerM2": 158625689,
+      "type": "dat",
+      "title": "Đất 113 m² Nguyễn Khánh Toàn",
+      "address": "182 Nguyễn Khánh Toàn, Cầu Giấy"
+    },
+    {
+      "id": "cg-035",
+      "lat": 21.009964,
+      "lng": 105.796171,
+      "areaM2": 101,
+      "pricePerM2": 169408617,
+      "type": "dat",
+      "title": "Đất 101 m² Trung Hòa",
+      "address": "18 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-036",
+      "lat": 21.043633,
+      "lng": 105.798486,
+      "areaM2": 58,
+      "pricePerM2": 156680697,
+      "type": "nha",
+      "title": "Nhà 58 m² Nguyễn Phong Sắc",
+      "address": "109 Nguyễn Phong Sắc, Cầu Giấy"
+    },
+    {
+      "id": "cg-037",
+      "lat": 21.048362,
+      "lng": 105.777454,
+      "areaM2": 67,
+      "pricePerM2": 132327694,
+      "type": "nha",
+      "title": "Nhà 67 m² Nguyễn Khánh Toàn",
+      "address": "18 Nguyễn Khánh Toàn, Cầu Giấy"
+    },
+    {
+      "id": "cg-038",
+      "lat": 21.040412,
+      "lng": 105.790942,
+      "areaM2": 144,
+      "pricePerM2": 116346442,
+      "type": "dat",
+      "title": "Đất 144 m² Xuân Thủy",
+      "address": "41 Xuân Thủy, Cầu Giấy"
+    },
+    {
+      "id": "cg-039",
+      "lat": 21.031155,
+      "lng": 105.787495,
+      "areaM2": 110,
+      "pricePerM2": 129058969,
+      "type": "dat",
+      "title": "Đất 110 m² Thành Thái",
+      "address": "171 Thành Thái, Cầu Giấy"
+    },
+    {
+      "id": "cg-040",
+      "lat": 21.018419,
+      "lng": 105.800828,
+      "areaM2": 74,
+      "pricePerM2": 167622468,
+      "type": "nha",
+      "title": "Nhà 74 m² Thành Thái",
+      "address": "115 Thành Thái, Cầu Giấy"
+    },
+    {
+      "id": "cg-041",
+      "lat": 21.033156,
+      "lng": 105.799769,
+      "areaM2": 90,
+      "pricePerM2": 179059051,
+      "type": "nha",
+      "title": "Nhà 90 m² Trần Thái Tông",
+      "address": "169 Trần Thái Tông, Cầu Giấy"
+    },
+    {
+      "id": "cg-042",
+      "lat": 21.024552,
+      "lng": 105.793748,
+      "areaM2": 137,
+      "pricePerM2": 136768162,
+      "type": "dat",
+      "title": "Đất 137 m² Nguyễn Văn Huyên",
+      "address": "65 Nguyễn Văn Huyên, Cầu Giấy"
+    },
+    {
+      "id": "cg-043",
+      "lat": 21.034639,
+      "lng": 105.787205,
+      "areaM2": 179,
+      "pricePerM2": 114724774,
+      "type": "dat",
+      "title": "Đất 179 m² Phạm Tuấn Tài",
+      "address": "133 Phạm Tuấn Tài, Cầu Giấy"
+    },
+    {
+      "id": "cg-044",
+      "lat": 21.039213,
+      "lng": 105.80159,
+      "areaM2": 90,
+      "pricePerM2": 171997208,
+      "type": "nha",
+      "title": "Nhà 90 m² Dịch Vọng Hậu",
+      "address": "97 Dịch Vọng Hậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-045",
+      "lat": 21.009547,
+      "lng": 105.804908,
+      "areaM2": 78,
+      "pricePerM2": 155846323,
+      "type": "nha",
+      "title": "Nhà 78 m² Tô Hiệu",
+      "address": "118 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-046",
+      "lat": 21.052357,
+      "lng": 105.807441,
+      "areaM2": 116,
+      "pricePerM2": 154926494,
+      "type": "dat",
+      "title": "Đất 116 m² Trần Thái Tông",
+      "address": "217 Trần Thái Tông, Cầu Giấy"
+    },
+    {
+      "id": "cg-047",
+      "lat": 21.03972,
+      "lng": 105.804667,
+      "areaM2": 212,
+      "pricePerM2": 154858412,
+      "type": "dat",
+      "title": "Đất 212 m² Tô Hiệu",
+      "address": "168 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-048",
+      "lat": 21.052737,
+      "lng": 105.805305,
+      "areaM2": 83,
+      "pricePerM2": 190635961,
+      "type": "nha",
+      "title": "Nhà 83 m² Tô Hiệu",
+      "address": "241 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-049",
+      "lat": 21.044603,
+      "lng": 105.788153,
+      "areaM2": 130,
+      "pricePerM2": 134700816,
+      "type": "dat",
+      "title": "Đất 130 m² Nguyễn Khánh Toàn",
+      "address": "82 Nguyễn Khánh Toàn, Cầu Giấy"
+    },
+    {
+      "id": "cg-050",
+      "lat": 21.042386,
+      "lng": 105.787674,
+      "areaM2": 69,
+      "pricePerM2": 125895158,
+      "type": "nha",
+      "title": "Nhà 69 m² Thành Thái",
+      "address": "240 Thành Thái, Cầu Giấy"
+    },
+    {
+      "id": "cg-051",
+      "lat": 21.009026,
+      "lng": 105.792387,
+      "areaM2": 92,
+      "pricePerM2": 153687717,
+      "type": "nha",
+      "title": "Nhà 92 m² Trung Hòa",
+      "address": "116 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-052",
+      "lat": 21.043609,
+      "lng": 105.792296,
+      "areaM2": 116,
+      "pricePerM2": 147570345,
+      "type": "dat",
+      "title": "Đất 116 m² Nguyễn Ngọc Vũ",
+      "address": "68 Nguyễn Ngọc Vũ, Cầu Giấy"
+    },
+    {
+      "id": "cg-053",
+      "lat": 21.039795,
+      "lng": 105.785276,
+      "areaM2": 102,
+      "pricePerM2": 142560239,
+      "type": "dat",
+      "title": "Đất 102 m² Dịch Vọng Hậu",
+      "address": "148 Dịch Vọng Hậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-054",
+      "lat": 21.002572,
+      "lng": 105.793526,
+      "areaM2": 94,
+      "pricePerM2": 120273089,
+      "type": "dat",
+      "title": "Đất 94 m² Tô Hiệu",
+      "address": "58 Tô Hiệu, Cầu Giấy"
+    },
+    {
+      "id": "cg-055",
+      "lat": 21.049252,
+      "lng": 105.802344,
+      "areaM2": 53,
+      "pricePerM2": 147313871,
+      "type": "nha",
+      "title": "Nhà 53 m² Cầu Giấy",
+      "address": "101 Cầu Giấy, Cầu Giấy"
+    },
+    {
+      "id": "cg-056",
+      "lat": 21.015862,
+      "lng": 105.788857,
+      "areaM2": 86,
+      "pricePerM2": 146228955,
+      "type": "nha",
+      "title": "Nhà 86 m² Dịch Vọng Hậu",
+      "address": "203 Dịch Vọng Hậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-057",
+      "lat": 21.046112,
+      "lng": 105.800763,
+      "areaM2": 67,
+      "pricePerM2": 166190066,
+      "type": "nha",
+      "title": "Nhà 67 m² Nguyễn Văn Huyên",
+      "address": "159 Nguyễn Văn Huyên, Cầu Giấy"
+    },
+    {
+      "id": "cg-058",
+      "lat": 21.042471,
+      "lng": 105.785643,
+      "areaM2": 92,
+      "pricePerM2": 138435035,
+      "type": "nha",
+      "title": "Nhà 92 m² Nguyễn Khánh Toàn",
+      "address": "38 Nguyễn Khánh Toàn, Cầu Giấy"
+    },
+    {
+      "id": "cg-059",
+      "lat": 21.018492,
+      "lng": 105.799768,
+      "areaM2": 90,
+      "pricePerM2": 158701351,
+      "type": "dat",
+      "title": "Đất 90 m² Cầu Giấy",
+      "address": "100 Cầu Giấy, Cầu Giấy"
+    },
+    {
+      "id": "cg-060",
+      "lat": 21.039368,
+      "lng": 105.792039,
+      "areaM2": 89,
+      "pricePerM2": 133429429,
+      "type": "nha",
+      "title": "Nhà 89 m² Thành Thái",
+      "address": "15 Thành Thái, Cầu Giấy"
+    },
+    {
+      "id": "cg-061",
+      "lat": 21.047876,
+      "lng": 105.779694,
+      "areaM2": 78,
+      "pricePerM2": 104069300,
+      "type": "nha",
+      "title": "Nhà 78 m² Trần Bình",
+      "address": "80 Trần Bình, Cầu Giấy"
+    },
+    {
+      "id": "cg-062",
+      "lat": 21.044528,
+      "lng": 105.788188,
+      "areaM2": 157,
+      "pricePerM2": 138228881,
+      "type": "dat",
+      "title": "Đất 157 m² Thành Thái",
+      "address": "19 Thành Thái, Cầu Giấy"
+    },
+    {
+      "id": "cg-063",
+      "lat": 21.019851,
+      "lng": 105.790232,
+      "areaM2": 70,
+      "pricePerM2": 148256478,
+      "type": "nha",
+      "title": "Nhà 70 m² Dịch Vọng Hậu",
+      "address": "191 Dịch Vọng Hậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-064",
+      "lat": 21.012081,
+      "lng": 105.791281,
+      "areaM2": 74,
+      "pricePerM2": 136457887,
+      "type": "nha",
+      "title": "Nhà 74 m² Nguyễn Ngọc Vũ",
+      "address": "154 Nguyễn Ngọc Vũ, Cầu Giấy"
+    },
+    {
+      "id": "cg-065",
+      "lat": 21.041055,
+      "lng": 105.802634,
+      "areaM2": 185,
+      "pricePerM2": 157323448,
+      "type": "dat",
+      "title": "Đất 185 m² Nguyễn Văn Huyên",
+      "address": "68 Nguyễn Văn Huyên, Cầu Giấy"
+    },
+    {
+      "id": "cg-066",
+      "lat": 21.022403,
+      "lng": 105.798206,
+      "areaM2": 148,
+      "pricePerM2": 152152600,
+      "type": "dat",
+      "title": "Đất 148 m² Trung Hòa",
+      "address": "202 Trung Hòa, Cầu Giấy"
+    },
+    {
+      "id": "cg-067",
+      "lat": 21.021405,
+      "lng": 105.792868,
+      "areaM2": 67,
+      "pricePerM2": 149729351,
+      "type": "nha",
+      "title": "Nhà 67 m² Dương Quảng Hàm",
+      "address": "92 Dương Quảng Hàm, Cầu Giấy"
+    },
+    {
+      "id": "cg-068",
+      "lat": 21.011739,
+      "lng": 105.802823,
+      "areaM2": 78,
+      "pricePerM2": 173871169,
+      "type": "nha",
+      "title": "Nhà 78 m² Hồ Tùng Mậu",
+      "address": "197 Hồ Tùng Mậu, Cầu Giấy"
+    },
+    {
+      "id": "cg-069",
+      "lat": 21.045092,
+      "lng": 105.794711,
+      "areaM2": 85,
+      "pricePerM2": 150105719,
+      "type": "dat",
+      "title": "Đất 85 m² Duy Tân",
+      "address": "57 Duy Tân, Cầu Giấy"
+    },
+    {
+      "id": "cg-070",
+      "lat": 21.042065,
+      "lng": 105.781207,
+      "areaM2": 50,
+      "pricePerM2": 119959258,
+      "type": "nha",
+      "title": "Nhà 50 m² Cầu Giấy",
+      "address": "153 Cầu Giấy, Cầu Giấy"
+    }
+  ]
+}
