@@ -5,6 +5,7 @@ const GROUP_LABELS: Record<string, string> = {
   residential: 'Đất ở',
   commercial: 'Thương mại, sản xuất',
   public: 'Công trình công cộng',
+  green: 'Cây xanh',
   transport: 'Giao thông',
   water: 'Mặt nước, thủy lợi',
   agriculture: 'Nông nghiệp',
@@ -30,7 +31,7 @@ export default function Legend({ items }: { items: LegendItem[] }) {
       <input
         className="legend-search"
         type="search"
-        placeholder="Tìm mã đất (ODT, TMD...)"
+        placeholder="Tìm loại đất (MN, CX, TMD...)"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />

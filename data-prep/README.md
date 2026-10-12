@@ -23,6 +23,8 @@ Với quận khác: đọc nhãn lưới trên ảnh, chạy `georef.py` với `
 4. Transformation: Polynomial 1 (hoặc Thin Plate Spline nếu ảnh scan bị méo), Target SRS dùng proj string trong `scripts/georef.py`.
 5. Xuất ra `work/qh_vn2000.tif`, rồi chạy phần còn lại của `03-tiles.sh` (bỏ bước gọi `georef.py`).
 
-## Ranh giới quận
+## Ranh giới
 
-Sau 07/2025 OSM chỉ còn các phường mới, nên `02-district.sh` lấy relation 9421132 ("Quận Cầu Giấy") tại thời điểm 2025-05-01 qua Overpass. Ranh này nguồn GADM, thô hơn bản đồ, nên khi cắt ảnh được nới thêm 60 m; nền giấy trắng ngoài ranh được chuyển thành trong suốt.
+Web đang xem **phường Tân Hưng** (OSM relation `2766950`). `build_tan_hung.py` cắt hiện trạng đúng theo polygon này, không nới buffer. Mép đỏ trên bản đồ và mép vùng tô là cùng một đường.
+
+Khi nắn PDF (pipeline `03-tiles.sh`): chỉ buffer 12 m để còn mép resample, rồi `mask_edge.py` khoét alpha đúng ranh và co thêm 2 pixel cho khỏi vệt màu bilinear. Pixel giấy gần-trắng (ba kênh xấp xỉ nhau) mới trong suốt; màu đất nhạt có sắc không bị đục lỗ. Không còn nới 60 m rồi xoá mọi pixel `255,255,255`.

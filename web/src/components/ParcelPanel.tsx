@@ -54,8 +54,8 @@ export default function ParcelPanel({ parcel, mix, listings, onStartDraw }: Prop
         </strong>
       </div>
 
-      <h3 className="subhead">Loại đất quy hoạch (ước lượng)</h3>
-      {mix === 'loading' && <p className="muted">Đang lấy mẫu màu trên lớp quy hoạch...</p>}
+      <h3 className="subhead">Loại đất trong thửa</h3>
+      {mix === 'loading' && <p className="muted">Đang giao thửa với vùng quy hoạch...</p>}
       {mix === null && <p className="muted">Không đọc được quy hoạch trong thửa.</p>}
       {Array.isArray(mix) && mix.length === 0 && <p className="muted">Chưa xác định được loại đất.</p>}
       {Array.isArray(mix) && mix.length > 0 && (
@@ -71,7 +71,9 @@ export default function ParcelPanel({ parcel, mix, listings, onStartDraw }: Prop
           ))}
         </ul>
       )}
-      <p className="muted">Tỷ lệ lấy từ mẫu điểm trên ảnh quy hoạch, không phải giao polygon vector.</p>
+      <p className="muted">
+        Tỷ lệ là phần giao của thửa với từng mảnh. Phần vẽ vượt ranh phường được tính riêng, không kéo màu ra ngoài mép.
+      </p>
 
       <h3 className="subhead">Giá xung quanh {NEARBY_RADIUS_M} m</h3>
       {prices.length === 0 ? (

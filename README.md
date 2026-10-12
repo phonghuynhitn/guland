@@ -1,8 +1,8 @@
-# Demo soi quy hoạch Cầu Giấy
+# Demo soi quy hoạch Tân Hưng
 
-Demo tính năng giống [guland.vn/soi-quy-hoach](https://guland.vn/soi-quy-hoach/ha-noi): bản đồ quy hoạch sử dụng đất đến 2030 của quận Cầu Giấy (cũ) đè lên ảnh vệ tinh; chú giải mã đất; vẽ ranh thửa; bản đồ giá từ tin ảo.
+Demo tính năng giống [guland.vn/soi-quy-hoach](https://guland.vn/soi-quy-hoach/ha-noi), nhưng vùng xem là **phường Tân Hưng, TP. Hồ Chí Minh** (ranh OSM sau sắp xếp 2025) để nhìn kênh và đường quen mà biết lớp có đặt đúng chỗ. Một vùng tô màu hiện trạng được cắt đúng ranh phường, đè lên ảnh vệ tinh; vẽ ranh thửa; bản đồ giá từ tin ảo.
 
-Toàn bộ công cụ và dữ liệu đều miễn phí. Bản đồ quy hoạch là file PDF công khai của Sở TN-MT Hà Nội (bản đăng lại trên datsach.net), chỉ dùng cho demo nội bộ, không có giá trị pháp lý.
+Toàn bộ công cụ và dữ liệu đều miễn phí. Vùng trên web là ranh và hiện trạng OpenStreetMap của phường Tân Hưng, chỉ để đối chiếu vị trí, không có giá trị pháp lý. Pipeline PDF Cầu Giấy vẫn nằm trong `data-prep/` cho thí nghiệm nắn ảnh.
 
 Tài liệu đầy đủ (các bước làm, luồng vận hành, cập nhật dữ liệu, lên sản phẩm, chi phí miễn phí): **[docs/huong-dan.md](docs/huong-dan.md)**. Nắn ảnh VN-2000: [data-prep/README.md](data-prep/README.md).
 
@@ -17,10 +17,12 @@ data-prep/        Xử lý dữ liệu: PDF -> ảnh có tọa độ -> PMTiles
     find_grid.py     Dò đường lưới tọa độ trên ảnh
     georef.py        Gán tọa độ VN-2000 từ lưới
     legend.py        Lấy màu chú giải -> legend.json
-    gen-listings.py  Sinh tin rao ảo trong ranh quận
+    gen-listings.py  Sinh tin rao ảo trong ranh phường Tân Hưng
+    build_tan_hung.py  Tải ranh + hiện trạng OSM, cắt đúng biên phường
+    mask_edge.py     Khoét alpha raster đúng ranh (khi có PDF)
   raw/ work/      Dữ liệu gốc và file trung gian (không commit)
 web/              Vite + React + Leaflet + Geoman
-  public/data/    cau-giay.pmtiles, district.geojson, legend.json, listings.json
+  public/data/    tan-hung-zone.geojson, tan-hung-boundary.geojson, listings.json
 ```
 
 ## Yêu cầu
@@ -29,17 +31,15 @@ web/              Vite + React + Leaflet + Geoman
 - Node.js `^20.19` hoặc `>=22.12` (Vite 8 không chạy trên Node 21), pnpm
 - QGIS (tùy chọn, chỉ cần khi nắn ảnh bằng tay): `brew install --cask qgis-ltr`
 
-## Chạy lại toàn bộ pipeline dữ liệu
+## Làm lại vùng Tân Hưng
 
 ```bash
-./data-prep/scripts/01-download.sh
-./data-prep/scripts/02-district.sh
-./data-prep/scripts/03-tiles.sh
-/opt/homebrew/bin/python3 data-prep/scripts/legend.py data-prep/work/qh.tif web/public/data/legend.json
-/opt/homebrew/bin/python3 data-prep/scripts/gen-listings.py
+python data-prep/scripts/build_tan_hung.py
 ```
 
-File kết quả đã có sẵn trong `web/public/data/`, chỉ cần chạy lại khi đổi dữ liệu.
+Cần Python 3 và `shapely`. Script tải ranh OSM, cắt hiện trạng đúng biên phường, ghi `web/public/data/tan-hung-*.json` và tin ảo.
+
+Pipeline PDF (nắn lưới, rồi `mask_edge.py` khoét alpha đúng ranh) vẫn là `01-download.sh`, `02-district.sh`, `03-tiles.sh` — chưa gắn vào trang web.
 
 ## Chạy web
 
