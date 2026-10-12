@@ -37,6 +37,31 @@ body,
   background: #0b1220;
 }
 
+.boot {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--muted);
+}
+
+.leaflet-planning-pane {
+  pointer-events: none;
+}
+
+.leaflet-planning-pane path {
+  pointer-events: auto;
+}
+
+.leaflet-planning-edge-pane {
+  pointer-events: none;
+}
+
+.zone-edge {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
 /* Panel: thẻ nổi bên trái trên desktop, bottom sheet trên mobile */
 .panel {
   position: absolute;
@@ -261,6 +286,20 @@ body,
 
 .popup p {
   margin: 0 0 8px;
+}
+
+.popup-lot strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.popup-lot p {
+  margin: 0 0 8px;
+}
+
+.panel-section .primary {
+  width: 100%;
 }
 
 .popup-landuse {

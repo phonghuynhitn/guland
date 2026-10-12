@@ -1,24 +1,26 @@
 # Hướng dẫn demo soi quy hoạch và lộ trình lên sản phẩm
 
-Tài liệu này mô tả demo hiện tại (quận Cầu Giấy cũ), các bước đã làm, cách vận hành, cách cập nhật dữ liệu, những việc cần đổi khi làm sản phẩm thật, và cách giữ chi phí gần 0 đồng càng lâu càng tốt.
+Tài liệu này mô tả demo hiện tại (**phường Tân Hưng, TP. Hồ Chí Minh**), các bước đã làm, cách vận hành, cách cập nhật dữ liệu, những việc cần đổi khi làm sản phẩm thật, và cách giữ chi phí gần 0 đồng càng lâu càng tốt.
 
-Demo **không có giá trị pháp lý**. Bản đồ quy hoạch là PDF công khai của Sở TN-MT Hà Nội (bản đăng lại), chỉ dùng nội bộ để học kiến trúc.
+Pipeline PDF ở các mục sau vẫn ghi lại cách nắn bản đồ Cầu Giấy (raster). Trang web không còn mở quận đó: một vùng quanh Tân Hưng dễ đối chiếu bằng mắt hơn.
+
+Demo **không có giá trị pháp lý**. Vùng Tân Hưng trên web là ranh và hiện trạng OpenStreetMap để kiểm tra vị trí, không phải bản đồ của Sở.
 
 ---
 
 ## 1. Demo đang làm được gì
 
-Trang web một tỉnh/một quận, bắt chước phần "soi quy hoạch" của [guland.vn](https://guland.vn/soi-quy-hoach/ha-noi):
+Trang web một phường, bắt chước phần "soi quy hoạch" của [guland.vn](https://guland.vn/soi-quy-hoach/ha-noi):
 
 - Nền vệ tinh hoặc nền đường phố, ghi nguồn Esri.
-- Lớp quy hoạch sử dụng đất đến 2030 đè đúng vị trí lên nền.
-- Thanh kéo độ đậm (opacity), bật/tắt lớp quy hoạch và ranh quận.
-- Bảng chú giải 32 mã đất (ODT, TMD, DGT...).
-- Bấm bản đồ: đoán loại đất theo màu pixel, hiện tọa độ WGS84 và VN-2000 (X bắc, Y đông).
-- **Vẽ thửa:** công cụ đa giác góc trên phải (Leaflet-Geoman). Panel tab Thửa hiện diện tích, tâm VN-2000, tỷ lệ loại đất **ước lượng** (lấy mẫu màu raster trong thửa, không phải giao vector).
-- **Bản đồ giá:** ~70 tin ảo trong ranh Cầu Giấy, chấm tròn tô màu theo đ/m². Khi đã vẽ thửa, tab Thửa liệt kê tin trong bán kính 500 m (min / trung vị / max).
+- Một vùng quy hoạch quanh phường Tân Hưng, tô theo hiện trạng OSM và **cắt đúng ranh** (không nới buffer, không khung chữ nhật).
+- Thanh kéo độ đậm (opacity), bật/tắt vùng tô và viền ranh. Viền đỏ + hào trắng bám cùng polygon với phần tô.
+- Bảng chú giải vài loại hiện trạng (đất ở, thương mại, cây xanh, mặt nước...).
+- Bấm bản đồ: loại đất theo polygon (điểm ngoài ranh báo ngoài vùng), tọa độ WGS84 và VN-2000 múi 105°45′.
+- **Vẽ thửa:** công cụ đa giác góc trên phải (Leaflet-Geoman). Panel tab Thửa hiện diện tích, tâm VN-2000, tỷ lệ loại đất bằng **phần giao polygon**. Phần thửa vượt ranh được tính riêng.
+- **Bản đồ giá:** 60 tin ảo trong ranh Tân Hưng, chấm tròn tô màu theo đ/m². Khi đã vẽ thửa, tab Thửa liệt kê tin trong bán kính 500 m (min / trung vị / max).
 
-**Chưa có:** % quy hoạch chính xác (cần lớp vector), tin giá thật, lưu thửa lên server, tìm tờ/thửa, OCR góc ranh, tài khoản, backend.
+**Chưa có:** bản đồ QHSDĐ của Sở, tin giá thật, lưu thửa lên server, tìm tờ/thửa, OCR góc ranh, tài khoản, backend. **Chưa làm tool kéo mốc** cho chuyên viên nắn tọa độ.
 
 Chạy local:
 
@@ -430,3 +432,4 @@ Những thứ này thường **không có bản miễn phí hợp pháp** nếu 
 4. Thay `listings.json` bằng tin user tự đăng.
 5. GitHub Pages đã public tại https://phonghuynhitn.github.io/guland/; Cloudflare Pages khi cần Range tốt hơn cho file lớn.
 6. Trước khi public: thay Esri bằng nguồn vệ tinh đã đọc điều khoản; giữ disclaimer giá ảo / không pháp lý.
+7. **Chưa làm, và cố ý chưa làm ở bước này:** tool kéo mốc để chuyên viên nắn tọa độ trên web. Vùng Tân Hưng lấy ranh OSM để đối chiếu kênh và đường; chưa cần mốc chỉnh tay.

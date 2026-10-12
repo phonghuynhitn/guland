@@ -1,6 +1,7 @@
 const data = (file: string) => `${import.meta.env.BASE_URL}data/${file}`
 
-export const PLANNING_URL: string = import.meta.env.VITE_PLANNING_URL ?? data('cau-giay.pmtiles')
-export const DISTRICT_URL = data('district.geojson')
+export const AREA_URL = data('tan-hung-area.json')
+export const ZONE_URL = data('tan-hung-zone.geojson')
+export const BOUNDARY_URL = data('tan-hung-boundary.geojson')
 export const LISTINGS_URL = data('listings.json')
-export const LEGEND_URL = data('legend.json')
+export const LOTS_URL = data('tan-hung-parcels.geojson?v=2')

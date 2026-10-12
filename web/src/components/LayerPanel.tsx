@@ -9,6 +9,9 @@ type Props = {
   onShowBoundaryChange: (value: boolean) => void
   showListings: boolean
   onShowListingsChange: (value: boolean) => void
+  showLots: boolean
+  onShowLotsChange: (value: boolean) => void
+  onFocusLots: () => void
   opacity: number
   onOpacityChange: (value: number) => void
 }
@@ -27,6 +30,9 @@ export default function LayerPanel({
   onShowBoundaryChange,
   showListings,
   onShowListingsChange,
+  showLots,
+  onShowLotsChange,
+  onFocusLots,
   opacity,
   onOpacityChange,
 }: Props) {
@@ -64,12 +70,19 @@ export default function LayerPanel({
 
       <label className="toggle">
         <input type="checkbox" checked={showPlanning} onChange={(e) => onShowPlanningChange(e.target.checked)} />
-        <span>QH sử dụng đất đến 2030</span>
+        <span>Vùng quy hoạch Tân Hưng</span>
       </label>
       <label className="toggle">
         <input type="checkbox" checked={showBoundary} onChange={(e) => onShowBoundaryChange(e.target.checked)} />
-        <span>Ranh giới quận</span>
+        <span>Ranh phường (khớp mép vùng tô)</span>
       </label>
+      <label className="toggle">
+        <input type="checkbox" checked={showLots} onChange={(e) => onShowLotsChange(e.target.checked)} />
+        <span>Ô đất — số tờ, số thửa (giả)</span>
+      </label>
+      <button type="button" className="primary" onClick={onFocusLots}>
+        Phóng tới các ô đất
+      </button>
       <label className="toggle">
         <input type="checkbox" checked={showListings} onChange={(e) => onShowListingsChange(e.target.checked)} />
         <span>Tin rao (demo)</span>

@@ -9,8 +9,8 @@ WEB_DATA="$ROOT/../web/public/data"
 NAME="${NAME:-cau-giay}"
 PDF="${PDF:-$RAW/cau-giay-qhsdd-2030.pdf}"
 PY=/opt/homebrew/bin/python3
-# Ranh OSM lấy từ GADM nên thô hơn bản đồ, nới rộng để không cắt mất phần rìa quận
-BUFFER_M="${BUFFER_M:-60}"
+# Chỉ chừa mép resample. Phần nhìn thấy trên web do mask_edge.py khoét đúng ranh, không nới 60 m.
+BUFFER_M="${BUFFER_M:-12}"
 
 mkdir -p "$WORK" "$WEB_DATA"
 cd "$WORK"
@@ -25,17 +25,20 @@ rm -f cutline.geojson
 ogr2ogr -f GeoJSON cutline.geojson "$RAW/district.geojson" -a_srs EPSG:3857 \
   -dialect sqlite -sql "SELECT ST_Buffer(ST_Transform(SetSRID(geometry, 4326), 3857), $BUFFER_M) AS geometry FROM multipolygons"
 
-rm -f warped.tif
-# Nền giấy trắng của PDF thành trong suốt để nhìn xuyên xuống ảnh vệ tinh
-gdalwarp -q -overwrite -t_srs EPSG:3857 -r bilinear -srcnodata "255 255 255" -dstalpha \
+rm -f warped.tif warped_masked.tif
+# Chưa xoá màu trắng ở bước này: màu đất nhạt bị thủng nếu coi mọi pixel 255 là nền giấy.
+gdalwarp -q -overwrite -t_srs EPSG:3857 -r bilinear \
   -cutline cutline.geojson -crop_to_cutline \
   -co COMPRESS=DEFLATE -co TILED=YES qh_vn2000.tif warped.tif
+
+# Alpha = đúng polygon ranh (co 2 pixel để cắt vệt bilinear), giấy gần-trắng mới trong suốt.
+(cd "$ROOT/scripts" && $PY mask_edge.py "$WORK/warped.tif" "$RAW/district.geojson" "$WORK/warped_masked.tif" --erode 2)
 
 # WEBP nhỏ hơn PNG khoảng 4 lần, giữ file dưới giới hạn 25 MiB/file của Cloudflare Pages
 TILE_FORMAT="${TILE_FORMAT:-WEBP}"
 rm -f "$NAME.mbtiles"
 gdal_translate -q -of MBTILES -co TILE_FORMAT="$TILE_FORMAT" -co QUALITY=90 -co ZOOM_LEVEL_STRATEGY=UPPER \
-  -co RESAMPLING=BILINEAR -co NAME="QHSDD $NAME 2030" warped.tif "$NAME.mbtiles"
+  -co RESAMPLING=BILINEAR -co NAME="QHSDD $NAME 2030" warped_masked.tif "$NAME.mbtiles"
 gdaladdo -q -r average "$NAME.mbtiles" 2 4 8 16 32 64
 
 rm -f "$WEB_DATA/$NAME.pmtiles"

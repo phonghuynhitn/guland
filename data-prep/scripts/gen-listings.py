@@ -1,36 +1,26 @@
-"""Sinh tin rao giả trong ranh Cầu Giấy. Dữ liệu chỉ để demo màu bản đồ giá."""
+"""Sinh tin rao giả trong ranh phường Tân Hưng. Dữ liệu chỉ để demo màu bản đồ giá.
+
+Muốn lấy tên đường từ OSM thì chạy build_tan_hung.py (ghi đè file này).
+"""
 import json
-import math
 import random
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DISTRICT = ROOT / "raw" / "district.geojson"
-if not DISTRICT.exists():
-    DISTRICT = ROOT.parent / "web" / "public" / "data" / "district.geojson"
+BOUNDARY = ROOT.parent / "web" / "public" / "data" / "tan-hung-boundary.geojson"
 OUT = ROOT.parent / "web" / "public" / "data" / "listings.json"
 
 STREETS = [
-    "Xuân Thủy",
-    "Cầu Giấy",
-    "Trần Đăng Ninh",
-    "Nguyễn Phong Sắc",
-    "Hoàng Quốc Việt",
-    "Trần Thái Tông",
-    "Dương Quảng Hàm",
-    "Nguyễn Khánh Toàn",
-    "Hồ Tùng Mậu",
-    "Nguyễn Văn Huyên",
-    "Thành Thái",
-    "Duy Tân",
-    "Trung Kính",
-    "Trung Hòa",
-    "Tô Hiệu",
-    "Nguyễn Ngọc Vũ",
-    "Phạm Tuấn Tài",
+    "Nguyễn Văn Linh",
+    "Nguyễn Lương Bằng",
     "Nguyễn Thị Thập",
-    "Trần Bình",
-    "Dịch Vọng Hậu",
+    "Lê Văn Lương",
+    "Trần Xuân Soạn",
+    "Lâm Văn Bền",
+    "Nguyễn Hữu Thọ",
+    "Huỳnh Tấn Phát",
+    "Đường số 9",
+    "Đường Số 10",
 ]
 
 
@@ -47,8 +37,16 @@ def point_in_ring(lng, lat, ring):
     return inside
 
 
-def point_in_district(lng, lat, geom):
-    for poly in geom["coordinates"]:
+def polygons_of(geom):
+    if geom["type"] == "Polygon":
+        return [geom["coordinates"]]
+    if geom["type"] == "MultiPolygon":
+        return geom["coordinates"]
+    return []
+
+
+def point_in_geom(lng, lat, geom):
+    for poly in polygons_of(geom):
         if not point_in_ring(lng, lat, poly[0]):
             continue
         if any(point_in_ring(lng, lat, hole) for hole in poly[1:]):
@@ -57,45 +55,62 @@ def point_in_district(lng, lat, geom):
     return False
 
 
+def bounds_of(geom):
+    lngs = []
+    lats = []
+
+    def walk(node):
+        if node and isinstance(node[0], (int, float)):
+            lngs.append(node[0])
+            lats.append(node[1])
+            return
+        for child in node:
+            walk(child)
+
+    walk(geom["coordinates"])
+    return min(lngs), min(lats), max(lngs), max(lats)
+
+
 def main():
-    fc = json.loads(DISTRICT.read_text())
+    fc = json.loads(BOUNDARY.read_text(encoding="utf-8"))
     geom = fc["features"][0]["geometry"]
+    min_lng, min_lat, max_lng, max_lat = bounds_of(geom)
     rng = random.Random(42)
     listings = []
     n = 0
-    while len(listings) < 70 and n < 8000:
+    while len(listings) < 60 and n < 12000:
         n += 1
-        lng = rng.uniform(105.767, 105.814)
-        lat = rng.uniform(21.001, 21.059)
-        if not point_in_district(lng, lat, geom):
+        lng = rng.uniform(min_lng, max_lng)
+        lat = rng.uniform(min_lat, max_lat)
+        if not point_in_geom(lng, lat, geom):
             continue
-        east = (lng - 105.767) / (105.814 - 105.767)
-        is_house = rng.random() < 0.55
-        area = rng.randint(48, 92) if is_house else rng.randint(60, 220)
-        base = 95 + east * 85 + (8 if is_house else 0)
-        price = int((base + rng.gauss(0, 12)) * 1_000_000)
-        price = max(72_000_000, min(220_000_000, price))
+        east = (lng - min_lng) / (max_lng - min_lng or 1)
+        is_house = rng.random() < 0.62
+        area = rng.randint(55, 140) if is_house else rng.randint(80, 280)
+        base = 160 + east * 140 + (12 if is_house else 0)
+        price = int((base + rng.gauss(0, 18)) * 1_000_000)
+        price = max(120_000_000, min(380_000_000, price))
         street = rng.choice(STREETS)
         i = len(listings) + 1
         kind = "nhà" if is_house else "đất"
         listings.append(
             {
-                "id": f"cg-{i:03d}",
+                "id": f"th-{i:03d}",
                 "lat": round(lat, 6),
                 "lng": round(lng, 6),
                 "areaM2": area,
                 "pricePerM2": price,
                 "type": "nha" if is_house else "dat",
                 "title": f"{kind.capitalize()} {area} m² {street}",
-                "address": f"{rng.randint(12, 248)} {street}, Cầu Giấy",
+                "address": f"{rng.randint(1, 240)} {street}, phường Tân Hưng",
             }
         )
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"source": "mock", "listings": listings}, ensure_ascii=False, indent=2) + "\n")
-    prices = [x["pricePerM2"] for x in listings]
+    OUT.write_text(
+        json.dumps({"source": "mock-tan-hung", "listings": listings}, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(f"wrote {len(listings)} listings -> {OUT}")
-    print(f"price/m2 min={min(prices):,} median={sorted(prices)[len(prices)//2]:,} max={max(prices):,}")
 
 
 if __name__ == "__main__":

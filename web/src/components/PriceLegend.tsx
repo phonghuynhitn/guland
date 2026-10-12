@@ -13,7 +13,7 @@ export default function PriceLegend({ listings, min, max }: Props) {
   return (
     <section className="panel-section">
       <p className="muted">
-        {listings.length} tin ảo trong quận Cầu Giấy. Màu chấm: xanh rẻ hơn, đỏ đắt hơn (đ/m²).
+        {listings.length} tin ảo trong phường Tân Hưng. Màu chấm: xanh rẻ hơn, đỏ đắt hơn (đ/m²).
       </p>
       <div className="price-scale">
         <div className="price-scale-bar" />
