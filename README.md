@@ -4,7 +4,7 @@ Demo tính năng giống [guland.vn/soi-quy-hoach](https://guland.vn/soi-quy-hoa
 
 Toàn bộ công cụ và dữ liệu đều miễn phí. Vùng trên web là ranh và hiện trạng OpenStreetMap của phường Tân Hưng, chỉ để đối chiếu vị trí, không có giá trị pháp lý. Pipeline PDF Cầu Giấy vẫn nằm trong `data-prep/` cho thí nghiệm nắn ảnh.
 
-Tài liệu đầy đủ (các bước làm, luồng vận hành, cập nhật dữ liệu, lên sản phẩm, chi phí miễn phí): **[docs/huong-dan.md](docs/huong-dan.md)**. Nắn ảnh VN-2000: [data-prep/README.md](data-prep/README.md).
+Tài liệu đầy đủ (các bước làm, luồng vận hành, cập nhật dữ liệu, lên sản phẩm, chi phí miễn phí): **[docs/huong-dan.md](docs/huong-dan.md)**. Pháp lý khi làm app thương mại giống Guland: **[docs/phap-ly.md](docs/phap-ly.md)**. Tech stack production (map nhanh, tải cao): **[docs/tech-stack-production.md](docs/tech-stack-production.md)**. Nắn ảnh VN-2000: [data-prep/README.md](data-prep/README.md).
 
 ## Cấu trúc
 

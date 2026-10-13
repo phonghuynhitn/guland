@@ -312,6 +312,8 @@ Khi nào mới cần backend: tài khoản, tin đăng bán, phân quyền "lớ
 
 ### 7.1 Dữ liệu và pháp lý (rủi ro lớn nhất)
 
+Tài liệu đầy đủ (QH công khai vs thương mại, địa chính, scrape, vệ tinh, privacy, checklist go-live): **[phap-ly.md](phap-ly.md)**.
+
 - PDF/CAD công khai **không đồng nghĩa** được quyền thương mại hóa. Trước khi public: lấy từ cổng Sở / thủ tục cung cấp thông tin, ghi nguồn, disclaimer "không thay thế hồ sơ pháp lý".
 - Dữ liệu địa chính (tờ, thửa) do Văn phòng đăng ký đất đai quản lý, có thu phí, hạn chế dùng thương mại. Demo cố tình không đụng phần này.
 - Không crawl tile/API của Guland hay Google. Học kiến trúc thì quan sát DevTools, không tải hàng loạt.
@@ -359,6 +361,8 @@ Leaflet đủ cho overlay raster + vẽ thửa (Leaflet-Geoman, miễn phí) + v
 7. App mobile sau khi web ổn.
 
 ### 7.8 Hiệu năng
+
+Tài liệu đầy đủ stack go-production (CDN, R2, catalog, MapLibre, PostGIS, checklist): **[tech-stack-production.md](tech-stack-production.md)**.
 
 - Một quận ~7–20 MB WEBP. Cả Hà Nội raster 1/2000 có thể hàng GB: chia theo phường, chỉ tải lớp đang bật.
 - Pages 25 MiB/file: mặc định đưa tile sang R2 khi vượt.
@@ -431,5 +435,4 @@ Những thứ này thường **không có bản miễn phí hợp pháp** nếu 
 3. Xin file CAD/SHP một phường để thử lớp vector (thay cho % ước lượng từ raster).
 4. Thay `listings.json` bằng tin user tự đăng.
 5. GitHub Pages đã public tại https://phonghuynhitn.github.io/guland/; Cloudflare Pages khi cần Range tốt hơn cho file lớn.
-6. Trước khi public: thay Esri bằng nguồn vệ tinh đã đọc điều khoản; giữ disclaimer giá ảo / không pháp lý.
-7. **Chưa làm, và cố ý chưa làm ở bước này:** tool kéo mốc để chuyên viên nắn tọa độ trên web. Vùng Tân Hưng lấy ranh OSM để đối chiếu kênh và đường; chưa cần mốc chỉnh tay.
+6. Trước khi public: thay Esri bằng nguồn vệ tinh đã đọc điều khoản; giữ disclaimer giá ảo / không pháp lý. Đọc checklist pháp lý [phap-ly.md](phap-ly.md) và checklist kỹ thuật [tech-stack-production.md](tech-stack-production.md).
