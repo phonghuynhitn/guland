@@ -155,7 +155,7 @@ Nếu PDF không có lưới hoặc bị nghiêng: nắn tay trong QGIS (mục "
 
 ### 4.5 Deploy (khi cần gửi link)
 
-Bản public hiện tại: **https://phonghuynhitn.github.io/guland/** — `git push` `main` là GitHub Actions deploy.
+`git push` `main` là GitHub Actions build Vite với base `/` rồi deploy GitHub Pages. Domain riêng mở ở gốc `/` (không còn `/guland/`). Trỏ DNS Cloudflare: [domain-github-pages.md](domain-github-pages.md).
 
 Cloudflare Pages (tùy chọn, URL gốc `/`):
 
@@ -434,5 +434,5 @@ Những thứ này thường **không có bản miễn phí hợp pháp** nếu 
 2. Ô nhập tọa độ VN-2000 / WGS84 (đã có `vn2000.ts`).
 3. Xin file CAD/SHP một phường để thử lớp vector (thay cho % ước lượng từ raster).
 4. Thay `listings.json` bằng tin user tự đăng.
-5. GitHub Pages đã public tại https://phonghuynhitn.github.io/guland/; Cloudflare Pages khi cần Range tốt hơn cho file lớn.
+5. GitHub Pages deploy từ `main` với base `/`. Domain riêng: [domain-github-pages.md](domain-github-pages.md). Cloudflare Pages khi cần Range tốt hơn cho file lớn.
 6. Trước khi public: thay Esri bằng nguồn vệ tinh đã đọc điều khoản; giữ disclaimer giá ảo / không pháp lý. Đọc checklist pháp lý [phap-ly.md](phap-ly.md) và checklist kỹ thuật [tech-stack-production.md](tech-stack-production.md).

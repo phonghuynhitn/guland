@@ -52,9 +52,7 @@ pnpm dev         # http://localhost:5173
 
 ## Deploy (miễn phí)
 
-Bản public: **https://phonghuynhitn.github.io/guland/**
-
-Mỗi lần `git push` lên `main`, GitHub Actions build Vite với `VITE_BASE=/guland/` rồi đưa `web/dist` lên GitHub Pages.
+Mỗi lần `git push` lên `main`, GitHub Actions build Vite với base `/` (mặc định trong `web/vite.config.ts`) rồi đưa `web/dist` lên GitHub Pages. Domain riêng phục vụ ở gốc `/`. Cách trỏ DNS trên Cloudflare: **[docs/domain-github-pages.md](docs/domain-github-pages.md)**.
 
 Cloudflare Pages (gốc `/`, tốt hơn cho file PMTiles lớn về sau):
 
