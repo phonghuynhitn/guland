@@ -1,0 +1,252 @@
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #0f766e;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+.plan {
+  height: 100%;
+  margin: 0;
+}
+
+.plan {
+  position: relative;
+  overflow: hidden;
+  background: #e7e5e4;
+}
+
+.plan-map {
+  position: absolute;
+  inset: 0;
+  background: #e7e5e4;
+}
+
+.boot {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+
+.panel {
+  position: absolute;
+  z-index: 1000;
+  top: 16px;
+  left: 16px;
+  width: 360px;
+  max-height: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header h1,
+.lot-card h2,
+.panel-body h2 {
+  margin: 0;
+}
+
+.panel-header h1 {
+  font-size: 16px;
+}
+
+.panel-header p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.panel-header > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.panel-toggle,
+.search button,
+.lot-list button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.panel-toggle,
+.search button {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+.search button {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.panel-body {
+  overflow: auto;
+  padding: 14px 16px 8px;
+}
+
+.search {
+  display: flex;
+  gap: 8px;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+}
+
+.note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.lot-card {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.lot-card h2,
+.panel-body h2 {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lot-code {
+  margin: 6px 0 0;
+  font-size: 28px;
+  font-weight: 650;
+}
+
+.lot-card dl {
+  margin: 10px 0 0;
+}
+
+.lot-card dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.lot-card dt {
+  color: var(--muted);
+}
+
+.lot-card dd {
+  margin: 0;
+  text-align: right;
+}
+
+.panel-body h2 {
+  margin-top: 16px;
+}
+
+.lot-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.lot-list button {
+  width: 100%;
+  display: flex;
+  text-align: left;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 8px;
+}
+
+.lot-list button.active,
+.lot-list button:hover {
+  background: #f0fdfa;
+}
+
+.lot-list strong,
+.lot-list small {
+  display: block;
+}
+
+.lot-list small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.panel-footer {
+  padding: 10px 16px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  border-top: 1px solid var(--border);
+}
+
+.lot-label {
+  background: transparent;
+  border: 0;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 1px 0 #fff, 0 0 4px #fff;
+}
+
+.leaflet-container {
+  font: inherit;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: min(52vh, 420px);
+  }
+
+  .panel.collapsed {
+    max-height: none;
+  }
+}

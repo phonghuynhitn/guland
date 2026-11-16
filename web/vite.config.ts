@@ -14,6 +14,7 @@ export default defineConfig({
       input: {
         main: resolve(root, 'index.html'),
         saban: resolve(root, 'sa-ban/index.html'),
+        saban2: resolve(root, 'sa-ban-2/index.html'),
       },
     },
   },
