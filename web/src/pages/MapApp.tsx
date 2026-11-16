@@ -9,7 +9,7 @@ import type { LotFeature } from '../lib/lots'
 import { AREA_URL, BOUNDARY_URL, LISTINGS_URL, LOTS_URL, ZONE_URL } from '../lib/mapConfig'
 import { polygonAreaM2, polygonCentroidLatLng } from '../lib/parcel'
 import { priceRange, type Listing, type ListingsFile } from '../lib/listings'
-import { hrefDwg } from '../lib/route'
+import { hrefCadViewer, hrefDwg } from '../lib/route'
 import { legendFromZones, zoneMix, type AreaMeta, type ZoneFeature } from '../lib/zone'
 
 type Tab = 'layers' | 'legend' | 'parcel' | 'price'
@@ -197,6 +197,10 @@ export default function MapApp() {
               Ranh và màu hiện trạng: OpenStreetMap. Số tờ, số thửa và giá là dữ liệu giả, không có giá trị pháp lý.{' '}
               <a className="panel-link" href={hrefDwg()}>
                 Xem DWG/DXF
+              </a>
+              {' · '}
+              <a className="panel-link" href={hrefCadViewer()}>
+                Xem DWG/DXF (MLight core)
               </a>
             </footer>
           </>
