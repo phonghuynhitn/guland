@@ -464,3 +464,337 @@ body,
     bottom: 96px;
   }
 }
+
+.panel-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.panel-link:hover {
+  text-decoration: underline;
+}
+
+.dwg-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100dvh;
+  background: #0b1220;
+}
+
+.dwg-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e293b;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.dwg-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.dwg-toolbar-row--tools {
+  align-items: flex-start;
+}
+
+.dwg-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dwg-tool-btn {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #1e293b;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.dwg-tool-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: #0f766e22;
+}
+
+.dwg-tool-btn.active {
+  border-color: var(--accent);
+  background: #0f766e;
+  color: #fff;
+}
+
+.dwg-tool-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dwg-search {
+  position: relative;
+  flex: 1 1 220px;
+  min-width: min(100%, 260px);
+}
+
+.dwg-search-input {
+  width: 100%;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background: #0b1220;
+  color: #f1f5f9;
+}
+
+.dwg-search-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.dwg-search-results {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  max-height: 240px;
+  overflow: auto;
+  list-style: none;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  box-shadow: var(--shadow);
+}
+
+.dwg-search-hit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  text-align: left;
+  background: transparent;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.dwg-search-hit:hover {
+  background: #1e293b;
+}
+
+.dwg-search-hit-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.dwg-search-hit-sub {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.dwg-search-empty {
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.dwg-tool-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.dwg-main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.dwg-back {
+  color: var(--accent-soft);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.dwg-back:hover {
+  text-decoration: underline;
+}
+
+.dwg-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.dwg-file input[type='file'] {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.dwg-viewer-host {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: min(60dvh, calc(100dvh - 140px));
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dwg-inspector {
+  flex: 0 0 min(280px, 36vw);
+  border-left: 1px solid #1e293b;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 14px 16px;
+  overflow: auto;
+}
+
+.dwg-inspector h2 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.dwg-inspector-headline {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.dwg-inspector ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.dwg-inspector-meta {
+  margin: 12px 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+@media (max-width: 720px) {
+  .dwg-main {
+    flex-direction: column;
+  }
+
+  .dwg-inspector {
+    flex: 0 0 auto;
+    max-height: 180px;
+    border-left: none;
+    border-top: 1px solid #1e293b;
+  }
+}
+
+.dwg-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dwg-viewer-host--nav .dwg-canvas {
+  cursor: grab;
+}
+
+.dwg-viewer-host--nav .dwg-canvas:active {
+  cursor: grabbing;
+}
+
+.dwg-measure-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+
+.dwg-measure-line {
+  stroke: #ff6600;
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.dwg-measure-line--done {
+  stroke-dasharray: none;
+}
+
+.dwg-measure-dot {
+  fill: #ff6600;
+}
+
+.dwg-measure-dot--cursor {
+  fill: none;
+  stroke: #ff6600;
+  stroke-width: 2;
+}
+
+.dwg-measure-label rect {
+  fill: rgba(15, 23, 42, 0.9);
+}
+
+.dwg-measure-label text {
+  fill: #ff6600;
+  font: 600 12px ui-monospace, Consolas, monospace;
+}
+
+.dwg-filename {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  max-width: min(280px, 40vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dwg-placeholder,
+.dwg-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  margin: 0;
+  padding: 8px 12px;
+  max-width: min(520px, calc(100% - 32px));
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  background: rgba(15, 23, 42, 0.88);
+  color: #cbd5e1;
+  pointer-events: none;
+}
+
+.dwg-status--error {
+  color: #fecaca;
+  border: 1px solid #7f1d1d;
+}
+
+.dwg-status--warn {
+  color: #fde68a;
+  border: 1px solid #92400e;
+}
+
+.dwg-status--ok {
+  color: #a7f3d0;
+}
