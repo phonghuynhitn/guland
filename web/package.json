@@ -7,6 +7,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-cadview-measure.mjs && node scripts/copy-mlight-workers.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
@@ -14,7 +15,16 @@
     "deploy": "pnpm build && wrangler pages deploy dist --project-name guland-demo"
   },
   "dependencies": {
+    "@cadview/core": "^0.5.0",
+    "@cadview/dwg": "^0.2.0",
+    "@cadview/react": "^0.5.0",
     "@geoman-io/leaflet-geoman-free": "^2.20.2",
+    "@mlightcad/cad-simple-viewer": "^1.7.8",
+    "@mlightcad/data-model": "^1.15.21",
+    "@mlightcad/libredwg-converter": "^3.15.21",
+    "@mlightcad/mtext-parser": "^1.5.7",
+    "@mlightcad/mtext-renderer": "^0.13.7",
+    "@mlightcad/three-renderer": "^1.7.8",
     "@turf/area": "^7.4.0",
     "@turf/boolean-point-in-polygon": "^7.4.0",
     "@turf/centroid": "^7.4.0",
@@ -22,11 +32,13 @@
     "@turf/helpers": "^7.4.0",
     "@turf/intersect": "^7.4.0",
     "leaflet": "^1.9.4",
+    "lodash-es": "^4.17.21",
     "pmtiles": "^4.5.0",
     "proj4": "^2.22.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-leaflet": "^5.0.0"
+    "react-leaflet": "^5.0.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.16",
@@ -39,5 +51,6 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "wrangler": "^4.148.0"
-  }
+  },
+  "packageManager": "pnpm@12.18.0+sha512.9d7882d5dc82147ecfc4e062aa34834e0ad0296710a1837a1115ae012127d36b7109e321ac1598a1dd0a65597681b1e99917e12ed0d749eae91187943363beb3"
 }

@@ -9,7 +9,13 @@ const root = fileURLToPath(new URL('.', import.meta.url))
 export default defineConfig({
   plugins: [react()],
   base: process.env.VITE_BASE ?? '/',
+  assetsInclude: ['**/*.wasm'],
+  optimizeDeps: {
+    include: ['@mlightcad/cad-simple-viewer', '@mlightcad/libredwg-converter'],
+  },
   build: {
+    // @mlightcad/cad-viewer ships Vue v-bind() in media queries; lightningcss rejects them.
+    cssMinify: 'esbuild',
     rollupOptions: {
       input: {
         main: resolve(root, 'index.html'),
