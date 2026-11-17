@@ -1,8 +1,10 @@
 import {
   AcApDocManager,
+  AcApOpenViewMode,
   AcApSettingManager,
   LIBREDWG_PARSER_WORKER_FILE,
   MTEXT_RENDERER_WORKER_FILE,
+  layoutBackgroundColorFromRgb,
   type AcApOpenDatabaseOptions,
 } from '@mlightcad/cad-simple-viewer'
 import { disableMlightBuiltInNavigation } from './mlightCadCamera'
@@ -10,7 +12,7 @@ import { AcDbDatabaseConverterManager, AcDbFileType } from '@mlightcad/data-mode
 import { AcDbLibreDwgConverter } from '@mlightcad/libredwg-converter'
 
 const CAD_DATA_BASE_URL = 'https://cdn.jsdelivr.net/gh/mlightcad/cad-data@main/'
-const VIEWER_BG_RGB = 0x1a1a1a
+export const MLIGHT_VIEWER_BG_RGB = 0xffffff
 
 let dwgConverterRegistered = false
 /** Bumped on each create call so stale async inits (React StrictMode) cannot tear down a newer viewer. */
@@ -67,7 +69,7 @@ function findReusableManager(container: HTMLElement): AcApDocManager | null {
 function applyViewerChrome(manager: AcApDocManager): void {
   const view = manager.curView
   if (!view) return
-  view.backgroundColor = VIEWER_BG_RGB
+  view.backgroundColor = MLIGHT_VIEWER_BG_RGB
   disableMlightBuiltInNavigation(view)
 }
 
@@ -153,4 +155,18 @@ export function createMlightDocManager(container: HTMLElement): Promise<AcApDocM
 
 export const defaultMlightOpenOptions: AcApOpenDatabaseOptions = {
   progressiveRendering: true,
+  openViewMode: AcApOpenViewMode.Extents,
+  sysVars: {
+    tilemode: 1,
+    paperbkcolor: layoutBackgroundColorFromRgb(MLIGHT_VIEWER_BG_RGB),
+    modelbkcolor: layoutBackgroundColorFromRgb(MLIGHT_VIEWER_BG_RGB),
+  },
+}
+
+export async function reframeMlightDrawingExtents(): Promise<void> {
+  const manager = AcApDocManager.tryGetInstance()
+  const view = manager?.curView
+  if (!manager || !view) return
+  view.backgroundColor = MLIGHT_VIEWER_BG_RGB
+  await manager.executeCommandString('zoom e')
 }

@@ -4,9 +4,18 @@ import { useMlightCadViewInteraction } from '../hooks/useMlightCadViewInteractio
 import {
   createMlightDocManager,
   defaultMlightOpenOptions,
+  MLIGHT_VIEWER_BG_RGB,
   MlightCadStaleInitError,
+  reframeMlightDrawingExtents,
 } from '../lib/mlightCadRuntime'
 import { hrefMap } from '../lib/route'
+
+const DEFAULT_DWG_NAME = '241108 Bd SDD-PhanLo MBH(DieuChinhTĐC-PA2).dwg'
+
+function defaultDwgUrl(): string {
+  const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+  return `${base}data/dwg/${encodeURIComponent(DEFAULT_DWG_NAME)}`
+}
 
 export default function CadViewerPage() {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -72,8 +81,10 @@ export default function CadViewerPage() {
     }
   }, [])
 
+  const openName = file?.name ?? DEFAULT_DWG_NAME
+
   useEffect(() => {
-    if (!file || !ready) {
+    if (!ready) {
       setLoading(false)
       return
     }
@@ -92,8 +103,21 @@ export default function CadViewerPage() {
       }
 
       try {
-        const buffer = await file.arrayBuffer()
-        const success = await manager.openDocument(file.name, buffer, {
+        let name: string
+        let buffer: ArrayBuffer
+        if (file) {
+          name = file.name
+          buffer = await file.arrayBuffer()
+        } else {
+          name = DEFAULT_DWG_NAME
+          const response = await fetch(defaultDwgUrl())
+          if (!response.ok) {
+            throw new Error('Không tải được bản vẽ mặc định.')
+          }
+          buffer = await response.arrayBuffer()
+        }
+
+        const success = await manager.openDocument(name, buffer, {
           ...defaultMlightOpenOptions,
           mode: AcEdOpenMode.Read,
         })
@@ -102,7 +126,9 @@ export default function CadViewerPage() {
           setLoadError('Không mở được file bản vẽ.')
           return
         }
-        await manager.executeCommandString('zoom e')
+        const view = manager.curView
+        if (view) view.backgroundColor = MLIGHT_VIEWER_BG_RGB
+        await reframeMlightDrawingExtents()
       } catch (err: unknown) {
         if (cancelled) return
         const message = err instanceof Error ? err.message : String(err)
@@ -136,12 +162,18 @@ export default function CadViewerPage() {
             <span>Chọn file .dxf hoặc .dwg</span>
             <input
               type="file"
-              accept=".dxf,.dwg"
-              disabled={!ready}
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              accept=".dxf,.dwg,application/acad,application/x-acad,image/vnd.dwg"
+              onClick={(event) => {
+                event.currentTarget.value = ''
+              }}
+              onChange={(event) => {
+                const picked = event.target.files?.[0] ?? null
+                setFile(picked)
+                setLoadError(null)
+              }}
             />
           </label>
-          {file && <span className="dwg-filename">{file.name}</span>}
+          {ready && <span className="dwg-filename">{openName}</span>}
         </div>
 
         <div className="dwg-toolbar-row dwg-toolbar-row--tools">
@@ -154,7 +186,7 @@ export default function CadViewerPage() {
 
         {ready && (
           <p className="dwg-tool-hint">
-            Giữ kéo: di chuyển · Click: chọn · Double-click: phóng/ thu vùng · Cuộn: zoom
+            Di chuột: tô sáng ô dưới con trỏ · Click: chọn ô đó · Kéo: di chuyển · Double-click: phóng vùng · Cuộn: zoom
             {spotZoomActive ? ' · Double-click lần nữa để trở về mức zoom trước' : ''}
           </p>
         )}
@@ -163,11 +195,8 @@ export default function CadViewerPage() {
       <div className="cad-viewer-main dwg-main">
         <div className="cad-viewer-host dwg-viewer-host dwg-viewer-host--nav">
           <div ref={hostRef} className="cad-viewer-canvas-host" />
-          {!file && !initError && ready && (
-            <p className="dwg-placeholder">Chọn file bản vẽ để xem.</p>
-          )}
           {!ready && !initError && <p className="dwg-status">Đang khởi tạo CAD engine…</p>}
-          {loading && file && <p className="dwg-status">Đang mở {file.name}…</p>}
+          {loading && <p className="dwg-status">Đang mở {openName}…</p>}
           {initError && (
             <p className="dwg-status dwg-status--error" role="alert">
               {initError}

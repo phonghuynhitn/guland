@@ -1,20 +1,14 @@
 import { useSyncExternalStore } from 'react'
 
-export type AppRoute = 'map' | 'dwg' | 'cad-viewer'
+export type AppRoute = 'map' | 'dwg'
 
 function readRoute(): AppRoute {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
-  if (path === '/cad-viewer' || path.startsWith('/cad-viewer/')) {
-    return 'cad-viewer'
-  }
   if (path === '/dwg' || path.startsWith('/dwg/')) {
     return 'dwg'
   }
 
   const hash = window.location.hash.replace(/^#\/?/, '')
-  if (hash === 'cad-viewer' || hash.startsWith('cad-viewer/') || hash.startsWith('cad-viewer?')) {
-    return 'cad-viewer'
-  }
   if (hash === 'dwg' || hash.startsWith('dwg/') || hash.startsWith('dwg?')) {
     return 'dwg'
   }
@@ -41,9 +35,9 @@ export function hrefDwg(): string {
 }
 
 export function hrefCadViewer(): string {
-  return '/cad-viewer'
+  return '/cad-viewer/'
 }
 
 export function hrefMap(): string {
-  return '#/'
+  return '/'
 }
