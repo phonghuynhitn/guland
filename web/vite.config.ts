@@ -21,6 +21,7 @@ export default defineConfig({
         main: resolve(root, 'index.html'),
         saban: resolve(root, 'sa-ban/index.html'),
         saban2: resolve(root, 'sa-ban-2/index.html'),
+        cadViewer: resolve(root, 'cad-viewer/index.html'),
       },
     },
   },

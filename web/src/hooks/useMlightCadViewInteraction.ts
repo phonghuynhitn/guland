@@ -6,6 +6,12 @@ import {
 import { type RefObject, useCallback, useEffect, useRef } from 'react'
 import { canvasLocalPoint } from '../lib/dwgMeasure'
 import {
+  applyLotSelection,
+  clearHoverEntity,
+  pickEntityIdAtCanvas,
+  setHoverEntity,
+} from '../lib/mlightCadPick'
+import {
   bindMlightViewFrameGuard,
   captureMlightView,
   disableMlightBuiltInNavigation,
@@ -18,6 +24,7 @@ import {
 
 const DRAG_THRESHOLD_PX = 5
 const WHEEL_ZOOM_BASE = 1.0012
+const HOVER_THROTTLE_MS = 48
 
 type Args = {
   hostRef: RefObject<HTMLDivElement | null>
@@ -71,7 +78,8 @@ export function useMlightCadViewInteraction({
     let lastX = 0
     let lastY = 0
     let dragging = false
-    let clickTimer: ReturnType<typeof setTimeout> | null = null
+    let hoverEntityId: string | null = null
+    let lastHoverAt = 0
     let unbindFrameGuard: (() => void) | null = null
     let guardTimer: ReturnType<typeof setInterval> | null = null
     let disposed = false
@@ -110,6 +118,10 @@ export function useMlightCadViewInteraction({
       if (!dragging && fromStart >= DRAG_THRESHOLD_PX) {
         dragging = true
         clearSpotZoom()
+        if (view) {
+          clearHoverEntity(view, hoverEntityId)
+          hoverEntityId = null
+        }
       }
 
       if (dragging) {
@@ -124,6 +136,18 @@ export function useMlightCadViewInteraction({
       event.stopImmediatePropagation()
     }
 
+    const onIdlePointerMove = (event: PointerEvent) => {
+      if (pointerId !== null) return
+      const view = getView()
+      if (!view || !canUseCustomNav() || !canvas) return
+      const now = performance.now()
+      if (now - lastHoverAt < HOVER_THROTTLE_MS) return
+      lastHoverAt = now
+      const local = canvasLocalPoint(canvas, event.clientX, event.clientY)
+      const nextId = pickEntityIdAtCanvas(view, local)
+      hoverEntityId = setHoverEntity(view, nextId, hoverEntityId)
+    }
+
     const onPointerUp = (event: PointerEvent) => {
       if (pointerId === null || event.pointerId !== pointerId) return
       const view = getView()
@@ -136,19 +160,9 @@ export function useMlightCadViewInteraction({
 
       if (view && !dragging && canUseCustomNav()) {
         const local = canvasLocalPoint(canvas!, event.clientX, event.clientY)
-        if (clickTimer) clearTimeout(clickTimer)
-        clickTimer = setTimeout(() => {
-          clickTimer = null
-          const v = getView()
-          if (!v || !canUseCustomNav()) return
-          const world = v.screenToWorld(local)
-          const hits = v.pick(world, undefined, true)
-          if (hits.length > 0) {
-            v.applySelection([hits[0].id], 'replace')
-          } else {
-            v.selectionSet.clear()
-          }
-        }, 240)
+        const id = pickEntityIdAtCanvas(view, local)
+        applyLotSelection(view, id)
+        hoverEntityId = setHoverEntity(view, id, hoverEntityId)
       }
 
       pointerId = null
@@ -158,10 +172,6 @@ export function useMlightCadViewInteraction({
     }
 
     const onDoubleClick = (event: MouseEvent) => {
-      if (clickTimer) {
-        clearTimeout(clickTimer)
-        clickTimer = null
-      }
       const view = getView()
       if (!view || !canUseCustomNav()) return
       const local = canvasLocalPoint(canvas!, event.clientX, event.clientY)
@@ -210,6 +220,7 @@ export function useMlightCadViewInteraction({
       if (view) {
         try {
           view.mode = AcEdViewMode.SELECTION
+          view.entitySelectionEnabled = true
           unbindFrameGuard?.()
           unbindFrameGuard = bindMlightViewFrameGuard(view)
         } catch {
@@ -220,6 +231,7 @@ export function useMlightCadViewInteraction({
       target.addEventListener('pointerdown', blockOrbitMouseButton, true)
       target.addEventListener('pointerdown', onPointerDown, true)
       target.addEventListener('pointermove', onPointerMove, true)
+      target.addEventListener('pointermove', onIdlePointerMove)
       target.addEventListener('pointerup', onPointerUp, true)
       target.addEventListener('pointercancel', onPointerUp, true)
       target.addEventListener('dblclick', onDoubleClick, true)
@@ -227,10 +239,13 @@ export function useMlightCadViewInteraction({
 
     const detachFromCanvas = () => {
       if (!canvas) return
-      if (clickTimer) clearTimeout(clickTimer)
+      const view = getView()
+      if (view) clearHoverEntity(view, hoverEntityId)
+      hoverEntityId = null
       canvas.removeEventListener('pointerdown', blockOrbitMouseButton, true)
       canvas.removeEventListener('pointerdown', onPointerDown, true)
       canvas.removeEventListener('pointermove', onPointerMove, true)
+      canvas.removeEventListener('pointermove', onIdlePointerMove)
       canvas.removeEventListener('pointerup', onPointerUp, true)
       canvas.removeEventListener('pointercancel', onPointerUp, true)
       canvas.removeEventListener('dblclick', onDoubleClick, true)
