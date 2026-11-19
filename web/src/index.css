@@ -37,6 +37,19 @@ body,
   background: #0b1220;
 }
 
+.tdl-click-log {
+  position: absolute;
+  z-index: 1000;
+  top: 16px;
+  left: 16px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
 .boot {
   height: 100%;
   display: grid;

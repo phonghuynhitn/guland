@@ -1,9 +1,12 @@
 import { useSyncExternalStore } from 'react'
 
-export type AppRoute = 'map' | 'dwg'
+export type AppRoute = 'map' | 'dwg' | 'tdl-scale-model'
 
 function readRoute(): AppRoute {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
+  if (path === '/tdl-scale-model') {
+    return 'tdl-scale-model'
+  }
   if (path === '/dwg' || path.startsWith('/dwg/')) {
     return 'dwg'
   }
@@ -40,4 +43,8 @@ export function hrefCadViewer(): string {
 
 export function hrefMap(): string {
   return '/'
+}
+
+export function hrefTdlScaleModel(): string {
+  return '/tdl-scale-model'
 }
