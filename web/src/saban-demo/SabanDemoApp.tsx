@@ -186,7 +186,7 @@ export default function SabanDemoApp() {
   const placed = useMemo(() => (meta && align ? withAlign(meta, align) : null), [meta, align])
   const preview = useMemo(() => (meta && previewAlign ? withAlign(meta, previewAlign) : null), [meta, previewAlign])
 
-  if (!meta || !align || !placed || !preview) return <div className="boot">{error ?? 'Đang tải sa bàn...'}</div>
+  if (!meta || !align || !previewAlign || !placed || !preview) return <div className="boot">{error ?? 'Đang tải sa bàn...'}</div>
 
   const north = (previewAlign.lat - meta.center.lat) * EARTH
   const east = (previewAlign.lng - meta.center.lng) * EARTH * Math.cos((meta.center.lat * Math.PI) / 180)

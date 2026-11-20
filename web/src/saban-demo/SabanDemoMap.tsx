@@ -504,7 +504,7 @@ export default function SabanDemoMap({
         key={base}
         url={tile.url}
         attribution={tile.attribution}
-        subdomains={tile.subdomains}
+        {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
         maxNativeZoom={tile.maxNativeZoom}
         maxZoom={tile.maxNativeZoom}
       />
