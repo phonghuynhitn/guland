@@ -12,6 +12,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "georef:pa2": "node scripts/georef-pa2-lots.mjs",
     "deploy": "pnpm build && wrangler pages deploy dist --project-name guland-demo"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@turf/helpers": "^7.4.0",
     "@turf/intersect": "^7.4.0",
     "leaflet": "^1.9.4",
+    "leaflet-imageoverlay-rotated": "^0.2.1",
     "lodash-es": "^4.17.21",
     "pmtiles": "^4.5.0",
     "proj4": "^2.22.0",

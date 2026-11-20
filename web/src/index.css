@@ -50,6 +50,138 @@ body,
   font-variant-numeric: tabular-nums;
 }
 
+.leaflet-tdl-quad-image {
+  pointer-events: none;
+  z-index: 250;
+}
+
+.tdl-scale-caption {
+  max-width: min(360px, calc(100% - 32px));
+}
+
+.tdl-click-log--coords {
+  top: 54px;
+}
+
+.tdl-corner-handle {
+  background: transparent;
+  border: none;
+}
+
+.tdl-corner-handle span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 3px solid #fff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+  cursor: grab;
+}
+
+.tdl-corner-handle:active span {
+  cursor: grabbing;
+}
+
+.tdl-editor-panel {
+  position: absolute;
+  z-index: 1000;
+  top: 16px;
+  left: 16px;
+  width: min(400px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  overflow: auto;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+
+.tdl-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tdl-editor-toggle {
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tdl-editor-hint {
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.tdl-editor-error {
+  margin: 0 0 8px;
+  color: #b91c1c;
+}
+
+.tdl-corner-list {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.tdl-corner-list li {
+  margin-bottom: 6px;
+}
+
+.tdl-corner-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.tdl-corner-list code {
+  display: block;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.tdl-config-snippet {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.tdl-copy-btn {
+  width: 100%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tdl-copy-hint {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .boot {
   height: 100%;
   display: grid;
