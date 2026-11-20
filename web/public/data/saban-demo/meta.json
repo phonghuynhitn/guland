@@ -1,0 +1,29 @@
+{
+  "title": "Sa bàn dự án Dragon Eden",
+  "frame": {
+    "width": 1789,
+    "height": 1040
+  },
+  "overlay": {
+    "image": "overlay-labels.webp",
+    "x": 360.7421875,
+    "y": 104.93450927734375,
+    "width": 1008.3232421875,
+    "height": 833.486328125
+  },
+  "center": {
+    "lat": 10.737018294302658,
+    "lng": 106.46732146447592
+  },
+  "metersPerPixel": 2.2988505747126435,
+  "zones": [
+    "PHÂN KHU 1 · DRAGON PARK",
+    "PHÂN KHU 2 · DRAGON RIVER",
+    "PHÂN KHU 3 · DRAGON CENTRAL",
+    "PHÂN KHU 4 · DRAGON AVENUE",
+    "PHÂN KHU 5 · DRAGON MEGA"
+  ],
+  "rotation": 0,
+  "scaleAcross": 1.0095879838436288,
+  "scaleAlong": 1.0300949501030097
+}
