@@ -383,8 +383,9 @@ function paintLotCodes(
   ctx.save()
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
+  const idle = active.length === 0
   for (const lot of labels) {
-    if (!active.includes(lot.status) || (zone !== 'all' && lot.zone !== zone)) continue
+    if ((!idle && !active.includes(lot.status)) || (zone !== 'all' && lot.zone !== zone)) continue
     const point = map.latLngToLayerPoint(frameToLatLng(meta, lot.x, lot.y))
     if (region && !region.contains(point)) continue
     const head = map.latLngToLayerPoint(frameToLatLng(meta, lot.longA[0], lot.longA[1]))
@@ -409,7 +410,7 @@ function paintLotCodes(
       if (size < 6.5) continue
       ctx.font = `600 ${size}px Inter, system-ui, sans-serif`
     }
-    const ink = LABEL_INK[lot.status]
+    const ink = idle ? '#1c1c1c' : LABEL_INK[lot.status]
     ctx.save()
     ctx.translate(point.x, point.y)
     ctx.rotate(Math.atan2(dy, dx))
@@ -521,7 +522,8 @@ export default function SabanDemoMap({
         style={(feature) => {
           const status = feature?.properties?.status as SaleStatus
           const lotZone = feature?.properties?.zone as string
-          const lit = active.includes(status) && (zone === 'all' || lotZone === zone)
+          const idle = active.length === 0
+          const lit = (zone === 'all' || lotZone === zone) && (idle || active.includes(status))
           return {
             renderer,
             stroke: lit,
@@ -530,8 +532,9 @@ export default function SabanDemoMap({
             opacity: lit ? 1 : 0,
             lineJoin: 'round',
             fill: true,
-            fillColor: STATUS_META[status].color,
-            fillOpacity: lit ? 1 : 0,
+            fillRule: 'nonzero',
+            fillColor: idle ? '#FFEDB3' : STATUS_META[status].color,
+            fillOpacity: lit ? (idle ? 0x80 / 255 : 1) : 0,
           }
         }}
         onEachFeature={(feature, layer) => {

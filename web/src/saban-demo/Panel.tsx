@@ -86,7 +86,7 @@ export default function Panel({
                 </li>
               ))}
             </ul>
-            <p className="hint">Nhóm chưa tích thì lô trong suốt. Trạng thái là dữ liệu demo, không lấy từ hệ thống bán hàng.</p>
+            <p className="hint">Chưa chọn trạng thái thì mọi lô hiện viền trắng, nền vàng nhạt. Tích một trạng thái để lọc theo màu. Trạng thái là dữ liệu demo, không lấy từ hệ thống bán hàng.</p>
           </section>
           {results.length > 0 && (
             <section>
