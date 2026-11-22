@@ -13,7 +13,7 @@
   },
   "center": {
     "lat": 10.737031794061593,
-    "lng": 106.46732675121278
+    "lng": 106.46732675120599
   },
   "metersPerPixel": 2.2988505747126435,
   "zones": [
@@ -27,14 +27,6 @@
   "scaleAcross": 1.0095879838436288,
   "scaleAlong": 1.0300949501030097,
   "zoneTweaks": {
-    "PHÂN KHU 5 · DRAGON MEGA": {
-      "east": -5,
-      "north": 0,
-      "scale": 1,
-      "rotation": 0,
-      "scaleAcross": 1,
-      "scaleAlong": 1
-    },
     "PHÂN KHU 1 · DRAGON PARK": {
       "east": -1,
       "north": 2,
@@ -52,8 +44,24 @@
       "scaleAlong": 1
     },
     "PHÂN KHU 3 · DRAGON CENTRAL": {
-      "east": -17,
-      "north": -6,
+      "east": -15,
+      "north": -7,
+      "scale": 1,
+      "rotation": 0,
+      "scaleAcross": 1,
+      "scaleAlong": 1
+    },
+    "PHÂN KHU 4 · DRAGON AVENUE": {
+      "east": -25,
+      "north": -10,
+      "scale": 1,
+      "rotation": 0,
+      "scaleAcross": 1,
+      "scaleAlong": 1
+    },
+    "PHÂN KHU 5 · DRAGON MEGA": {
+      "east": -28,
+      "north": -12,
       "scale": 1,
       "rotation": 0,
       "scaleAcross": 1,
@@ -113,6 +121,42 @@
       [
         866.591084580132,
         371.26239405911383
+      ]
+    ],
+    "PHÂN KHU 4 · DRAGON AVENUE": [
+      [
+        848.8699864095429,
+        352.5286347736181
+      ],
+      [
+        1012.6018648744003,
+        227.23088153305198
+      ],
+      [
+        1185.2276968862327,
+        447.84814916710496
+      ],
+      [
+        1018.4022472019927,
+        574.0898554574405
+      ]
+    ],
+    "PHÂN KHU 5 · DRAGON MEGA": [
+      [
+        1183.8356529673217,
+        446.68205351556685
+      ],
+      [
+        1010.1746478610041,
+        223.49098419920753
+      ],
+      [
+        1212.1646026745193,
+        76.64093620148853
+      ],
+      [
+        1380.6194863232747,
+        300.7236662393022
       ]
     ]
   }
