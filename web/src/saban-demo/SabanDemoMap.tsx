@@ -148,12 +148,12 @@ function clipHiding(width: number, height: number, holes: [number, number][][]) 
 
 function applyClip(img: HTMLImageElement, value: string) {
   img.style.clipPath = value
-  img.style.webkitClipPath = value
+  img.style.setProperty('-webkit-clip-path', value)
 }
 
 function clearClip(img: HTMLImageElement) {
   img.style.clipPath = 'none'
-  img.style.webkitClipPath = 'none'
+  img.style.setProperty('-webkit-clip-path', 'none')
 }
 
 function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
