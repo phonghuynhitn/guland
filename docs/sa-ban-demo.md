@@ -24,7 +24,7 @@ Vite 8 cần Node 22. Node 21 làm trang không lên.
 3. Xuất từng lô thành polygon trong hệ pixel của frame, không gán lat/lng riêng cho từng lô. File `web/public/data/saban-demo/lots.json` có 5.396 lô.
 4. Ghim cả frame lên một điểm EPSG:3857 bằng tâm, mét/pixel, góc xoay và hai hệ số kéo. Công thức nằm ở `frameToLatLng` trong `web/src/saban-demo/model.ts`.
 5. Khóa camera trong khung dự án: zoom vào được, kéo và thu nhỏ không ra khỏi mặt bằng.
-6. Vẽ lô bằng canvas Leaflet. Nhóm trạng thái chưa tích thì trong suốt. Nhóm đã tích thì tô đặc, viền trắng, và vẽ lại mã lô lên lớp màu.
+6. Vẽ lô bằng canvas Leaflet. Mọi lô luôn có polygon. Nhóm trạng thái chưa tích thì tô be nhạt và viền trắng. Nhóm đã tích thì tô đặc, viền trắng, và vẽ lại mã lô lên lớp màu.
 7. Thêm panel tìm mã lô, lọc phân khu và năm trạng thái. Một mã khớp thì bay tới lô. Nhiều lô cùng mã thì liệt kê.
 8. Thêm chế độ căn chỉnh tay (kéo, tỷ lệ, ngang, dọc, xoay) và nút lưu cấu hình vào `meta.json` khi đang chạy `pnpm dev`.
 9. Nền mặc định là vệ tinh Google. Nút góc bản đồ đổi sang bản đồ đường Esri.
@@ -103,7 +103,7 @@ Pane Leaflet, từ dưới lên:
 | `selectPane` | 560 | Viền đen của lô đang chọn |
 | popup | 700 | Thẻ thông tin lô |
 
-Canvas nằm trên ảnh nên màu lọc che mặt bằng và vệ tinh. Lô không thuộc nhóm đang lọc có `fillOpacity` 0 và không viền, nên ảnh số lô bên dưới vẫn hiện.
+Canvas nằm trên ảnh nên màu lô che mặt bằng và vệ tinh. Lô không thuộc nhóm đang lọc vẫn được vẽ: tô be nhạt `#C5B893`, viền trắng 2 px. Ảnh mặt bằng chỉ còn lộ ở khoảng trống giữa các lô.
 
 ---
 
@@ -134,7 +134,7 @@ Trạng thái không gọi API bán hàng. `demoStatus` băm mã lô (FNV-1a, of
 
 Với bộ dữ liệu hiện tại, số lô theo trạng thái là 1.095 / 1.070 / 1.049 / 1.074 / 1.108. Đổi mã hoặc thêm lô thì số đếm đổi theo, vì panel đếm lại từ `demoStatus`.
 
-Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Nhóm tắt: không tô, không viền.
+Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Nhóm tắt, hoặc lô ngoài phân khu đang chọn: vẫn tô đặc be nhạt `#C5B893`, viền trắng 2 px. Mã lô vẽ trên cả hai nền. Chữ trên nền be là `#3d2914`, có viền trắng 1 px.
 
 Mã lô trên lớp màu không phải marker DOM. Sau mỗi `_redraw` của canvas, `paintLotCodes` vẽ chữ vào cùng context:
 
@@ -144,7 +144,7 @@ Mã lô trên lớp màu không phải marker DOM. Sau mỗi `_redraw` của can
 - bỏ qua lô khi cạnh dài dưới 16 px, cạnh ngắn dưới 8 px, hoặc chữ nhỏ hơn khoảng 6,5 px
 - chữ trắng trên nền giữ chỗ, đặt cọc, ký HĐCN; chữ `#1c1c1c` kèm viền trắng 1 px trên nền còn trống và thanh lý
 
-Vẽ lại một vùng thì chỉ vẽ những mã có neo nằm trong vùng đó, nới thêm 48 px. Vẽ lại toàn canvas thì vẽ hết mã đang lọc.
+Vẽ lại một vùng thì chỉ vẽ những mã có neo nằm trong vùng đó, nới thêm 48 px. Vẽ lại toàn canvas thì vẽ hết mã đang thấy được.
 
 Renderer được tạo một lần (`useMemo` rỗng) và đọc trạng thái lọc qua ref. Đổi hàm vẽ chữ thì cần tải lại trang; hot reload không thay closure cũ.
 
@@ -223,6 +223,6 @@ Lớp giao thông không khai báo `subdomains`. Leaflet vẫn gọi `_getSubdom
 
 - Trạng thái là hàm băm của mã, không phải tình trạng bán thật.
 - Diện tích, hướng, đơn giá và thành tiền chưa có nguồn, nên popup để `—`.
-- Số trên ảnh là số in trong `overlay-labels.webp`. Số trên lớp màu chỉ hiện khi nhóm trạng thái đang bật và lô đủ lớn trên màn hình.
+- Số trên ảnh là số in trong `overlay-labels.webp`, bị lớp lô che. Số trên lớp màu hiện khi lô đủ lớn trên màn hình, kể cả lúc chưa lọc.
 - API lưu căn chỉnh chỉ có khi chạy Vite dev. Bản build tĩnh không ghi được `meta.json`.
 - Khóa camera theo khung frame đã chiếu. Xoay hoặc kéo mạnh lúc căn chỉnh có thể để một phần dự án sát mép vùng khóa.

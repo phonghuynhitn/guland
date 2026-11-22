@@ -3,6 +3,7 @@ import L from 'leaflet'
 import type { Feature, FeatureCollection, Polygon } from 'geojson'
 import { GeoJSON, MapContainer, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
 import {
+  IDLE_LOT,
   STATUS_META,
   demoStatus,
   frameToLatLng,
@@ -384,7 +385,7 @@ function paintLotCodes(
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   for (const lot of labels) {
-    if (!active.includes(lot.status) || (zone !== 'all' && lot.zone !== zone)) continue
+    const lit = active.includes(lot.status) && (zone === 'all' || lot.zone === zone)
     const point = map.latLngToLayerPoint(frameToLatLng(meta, lot.x, lot.y))
     if (region && !region.contains(point)) continue
     const head = map.latLngToLayerPoint(frameToLatLng(meta, lot.longA[0], lot.longA[1]))
@@ -409,7 +410,7 @@ function paintLotCodes(
       if (size < 6.5) continue
       ctx.font = `600 ${size}px Inter, system-ui, sans-serif`
     }
-    const ink = LABEL_INK[lot.status]
+    const ink = lit ? LABEL_INK[lot.status] : IDLE_LOT.ink
     ctx.save()
     ctx.translate(point.x, point.y)
     ctx.rotate(Math.atan2(dy, dx))
@@ -524,14 +525,14 @@ export default function SabanDemoMap({
           const lit = active.includes(status) && (zone === 'all' || lotZone === zone)
           return {
             renderer,
-            stroke: lit,
-            color: '#ffffff',
-            weight: lit ? 2 : 0,
-            opacity: lit ? 1 : 0,
+            stroke: true,
+            color: IDLE_LOT.stroke,
+            weight: 2,
+            opacity: 1,
             lineJoin: 'round',
             fill: true,
-            fillColor: STATUS_META[status].color,
-            fillOpacity: lit ? 1 : 0,
+            fillColor: lit ? STATUS_META[status].color : IDLE_LOT.fill,
+            fillOpacity: 1,
           }
         }}
         onEachFeature={(feature, layer) => {

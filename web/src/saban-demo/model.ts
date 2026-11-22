@@ -35,6 +35,9 @@ export const STATUS_META: Record<SaleStatus, { label: string; color: string }> =
   liquidated: { label: 'Đã thanh lý', color: '#E58C00' },
 }
 
+/** Unfiltered lots stay drawn. Fill is a skin tone so the plan photo is not the lot. */
+export const IDLE_LOT = { fill: '#C5B893', stroke: '#ffffff', ink: '#3d2914' }
+
 const dataUrl = (file: string) => `${import.meta.env.BASE_URL}data/saban-demo/${file}`
 
 export const META_URL = dataUrl('meta.json')
