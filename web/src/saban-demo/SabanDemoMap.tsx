@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useRef } from 'react'
 import L from 'leaflet'
 import type { Feature, FeatureCollection, Polygon } from 'geojson'
-import { GeoJSON, MapContainer, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
+import { CircleMarker, GeoJSON, MapContainer, Polygon as ZonePolygon, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
 import {
   IDLE_LOT,
   STATUS_META,
   demoStatus,
   frameToLatLng,
+  identityTweak,
   khuOf,
+  latLngToFrame,
   overlayUrl,
   type BaseLayer,
   type Lot,
@@ -44,23 +46,40 @@ type Props = {
   unlocked: boolean
   dragLayer: boolean
   hideLots: boolean
+  alignZone: string | null
+  focusZone: string | null
+  focusZoneNonce: number
   onDrag: (east: number, north: number) => void
   onDragEnd: () => void
+  sketching: boolean
+  sketchZone: string | null
+  draft: [number, number][]
+  onSketch: (point: [number, number]) => void
 }
 
 function projectBounds(meta: PlanMeta) {
   const { width, height } = meta.frame
-  return L.latLngBounds([
+  const points: [number, number][] = [
     frameToLatLng(meta, 0, 0),
     frameToLatLng(meta, width, 0),
     frameToLatLng(meta, width, height),
     frameToLatLng(meta, 0, height),
-  ])
+  ]
+  for (const [zone, anchor] of Object.entries(meta.anchors ?? {})) {
+    points.push(
+      frameToLatLng(meta, anchor.minX, anchor.minY, zone),
+      frameToLatLng(meta, anchor.maxX, anchor.minY, zone),
+      frameToLatLng(meta, anchor.maxX, anchor.maxY, zone),
+      frameToLatLng(meta, anchor.minX, anchor.maxY, zone),
+    )
+    for (const [x, y] of meta.zoneOutlines?.[zone] ?? []) points.push(frameToLatLng(meta, x, y, zone))
+  }
+  return L.latLngBounds(points)
 }
 
-function closedRing(meta: PlanMeta, ring: [number, number][]) {
+function closedRing(meta: PlanMeta, ring: [number, number][], zone?: string) {
   const points = ring.map(([x, y]) => {
-    const [lat, lng] = frameToLatLng(meta, x, y)
+    const [lat, lng] = frameToLatLng(meta, x, y, zone)
     return [lng, lat]
   })
   const first = points[0]
@@ -94,7 +113,7 @@ function FlyTo({ lot, meta, nonce }: { lot: Lot | null; meta: PlanMeta; nonce: n
   const map = useMap()
   useEffect(() => {
     if (!nonce || !lot) return
-    const bounds = L.latLngBounds(lot.ring.map(([x, y]) => frameToLatLng(meta, x, y)))
+    const bounds = L.latLngBounds(lot.ring.map(([x, y]) => frameToLatLng(meta, x, y, lot.zone)))
     map.fitBounds(bounds, { padding: [80, 80], maxZoom: 19, animate: true })
   }, [nonce, lot, map, meta])
   return null
@@ -108,6 +127,35 @@ function ZoomBridge({ onReady }: { onReady: (map: L.Map) => void }) {
   return null
 }
 
+function toImagePixels(meta: PlanMeta, ring: [number, number][], width: number, height: number) {
+  const { x, y, width: frameWidth, height: frameHeight } = meta.overlay
+  return ring.map(([fx, fy]) => [((fx - x) / frameWidth) * width, ((fy - y) / frameHeight) * height] as [number, number])
+}
+
+function ringPath(ring: [number, number][]) {
+  const [first, ...rest] = ring
+  if (!first) return ''
+  return `M ${first[0].toFixed(2)} ${first[1].toFixed(2)} ${rest.map(([x, y]) => `L ${x.toFixed(2)} ${y.toFixed(2)}`).join(' ')} Z`
+}
+
+function clipShowing(rings: [number, number][][]) {
+  return `path(evenodd, '${rings.map(ringPath).join(' ')}')`
+}
+
+function clipHiding(width: number, height: number, holes: [number, number][][]) {
+  return `path(evenodd, 'M 0 0 H ${width} V ${height} H 0 Z ${holes.map(ringPath).join(' ')}')`
+}
+
+function applyClip(img: HTMLImageElement, value: string) {
+  img.style.clipPath = value
+  img.style.webkitClipPath = value
+}
+
+function clearClip(img: HTMLImageElement) {
+  img.style.clipPath = 'none'
+  img.style.webkitClipPath = 'none'
+}
+
 function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
   const map = useMap()
   const metaRef = useRef(meta)
@@ -119,6 +167,7 @@ function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
   useEffect(() => {
     const pane = map.getPane('planPane')
     if (!pane) return
+    pane.querySelectorAll('.plan-overlay').forEach((node) => node.remove())
     const img = document.createElement('img')
     img.className = 'plan-overlay leaflet-zoom-animated'
     img.alt = ''
@@ -130,26 +179,27 @@ function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
     img.style.transformOrigin = '0 0'
     img.style.pointerEvents = 'none'
     pane.prepend(img)
+    const clones = new Map<string, HTMLImageElement>()
 
     const animMap = map as L.Map & {
       _animatingZoom?: boolean
       _latLngToNewLayerPoint: (latlng: L.LatLng, zoom: number, center: L.LatLng) => L.Point
     }
-    const place = (zoom?: number, center?: L.LatLng) => {
+    const placeImage = (node: HTMLImageElement, zone: string | undefined, zoom?: number, center?: L.LatLng) => {
       const current = metaRef.current
-      const width = img.naturalWidth
-      const height = img.naturalHeight
+      const width = node.naturalWidth
+      const height = node.naturalHeight
       if (!width || !height) return
-      img.style.width = `${width}px`
-      img.style.height = `${height}px`
-      img.style.opacity = String(opacityRef.current)
+      node.style.width = `${width}px`
+      node.style.height = `${height}px`
+      node.style.opacity = String(opacityRef.current)
       const { x, y, width: frameWidth, height: frameHeight } = current.overlay
       const toPoint = (lat: number, lng: number) =>
         zoom != null && center
           ? animMap._latLngToNewLayerPoint(L.latLng(lat, lng), zoom, center)
           : map.latLngToLayerPoint([lat, lng])
       const corner = (fx: number, fy: number) => {
-        const [lat, lng] = frameToLatLng(current, fx, fy)
+        const [lat, lng] = frameToLatLng(current, fx, fy, zone)
         return toPoint(lat, lng)
       }
       const nw = corner(x, y)
@@ -159,7 +209,51 @@ function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
       const b = (ne.y - nw.y) / width
       const c = (sw.x - nw.x) / height
       const d = (sw.y - nw.y) / height
-      img.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${nw.x}, ${nw.y})`
+      node.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${nw.x}, ${nw.y})`
+    }
+    const place = (zoom?: number, center?: L.LatLng) => {
+      if (!img.isConnected) return
+      const current = metaRef.current
+      const width = img.naturalWidth
+      const height = img.naturalHeight
+      if (!width || !height) return
+      const moved: { zone: string; ring: [number, number][] }[] = []
+      for (const [zone, ring] of Object.entries(current.zoneOutlines ?? {})) {
+        const tweak = current.zoneTweaks?.[zone]
+        if (ring.length >= 3 && tweak && !identityTweak(tweak)) moved.push({ zone, ring: toImagePixels(current, ring, width, height) })
+      }
+      const hide = moved.map((item) => item.ring)
+      if (hide.length === 0) clearClip(img)
+      else applyClip(img, clipHiding(width, height, hide))
+      placeImage(img, undefined, zoom, center)
+      const keep = new Set(moved.map((item) => item.zone))
+      for (const [zone, node] of clones) {
+        if (keep.has(zone)) continue
+        node.remove()
+        clones.delete(zone)
+      }
+      for (const item of moved) {
+        let node = clones.get(item.zone)
+        if (!node) {
+          node = document.createElement('img')
+          node.className = 'plan-overlay leaflet-zoom-animated'
+          node.alt = ''
+          node.draggable = false
+          node.dataset.zone = item.zone
+          node.style.position = 'absolute'
+          node.style.left = '0'
+          node.style.top = '0'
+          node.style.maxWidth = 'none'
+          node.style.transformOrigin = '0 0'
+          node.style.pointerEvents = 'none'
+          node.src = img.src
+          pane.append(node)
+          clones.set(item.zone, node)
+          if (!node.complete) node.onload = () => placeRef.current()
+        }
+        applyClip(node, clipShowing([item.ring]))
+        placeImage(node, item.zone, zoom, center)
+      }
     }
     const placeSettled = () => {
       if (animMap._animatingZoom) return
@@ -177,6 +271,7 @@ function PlanImage({ meta, opacity }: { meta: PlanMeta; opacity: number }) {
       map.off('move zoom viewreset resize', placeSettled)
       map.off('zoomanim', placeAnimated)
       img.remove()
+      for (const node of clones.values()) node.remove()
     }
   }, [map])
 
@@ -386,12 +481,12 @@ function paintLotCodes(
   ctx.textBaseline = 'middle'
   for (const lot of labels) {
     const lit = active.includes(lot.status) && (zone === 'all' || lot.zone === zone)
-    const point = map.latLngToLayerPoint(frameToLatLng(meta, lot.x, lot.y))
+    const point = map.latLngToLayerPoint(frameToLatLng(meta, lot.x, lot.y, lot.zone))
     if (region && !region.contains(point)) continue
-    const head = map.latLngToLayerPoint(frameToLatLng(meta, lot.longA[0], lot.longA[1]))
-    const tail = map.latLngToLayerPoint(frameToLatLng(meta, lot.longB[0], lot.longB[1]))
-    const side = map.latLngToLayerPoint(frameToLatLng(meta, lot.shortB[0], lot.shortB[1]))
-    const sideStart = map.latLngToLayerPoint(frameToLatLng(meta, lot.shortA[0], lot.shortA[1]))
+    const head = map.latLngToLayerPoint(frameToLatLng(meta, lot.longA[0], lot.longA[1], lot.zone))
+    const tail = map.latLngToLayerPoint(frameToLatLng(meta, lot.longB[0], lot.longB[1], lot.zone))
+    const side = map.latLngToLayerPoint(frameToLatLng(meta, lot.shortB[0], lot.shortB[1], lot.zone))
+    const sideStart = map.latLngToLayerPoint(frameToLatLng(meta, lot.shortA[0], lot.shortA[1], lot.zone))
     let dx = tail.x - head.x
     let dy = tail.y - head.y
     const longLen = Math.hypot(dx, dy)
@@ -427,6 +522,131 @@ function paintLotCodes(
   ctx.restore()
 }
 
+function FlyToZone({ zone, meta, nonce }: { zone: string | null; meta: PlanMeta; nonce: number }) {
+  const map = useMap()
+  const metaRef = useRef(meta)
+  metaRef.current = meta
+  useEffect(() => {
+    if (!nonce || !zone) return
+    const current = metaRef.current
+    const anchor = current.anchors?.[zone]
+    const outline = current.zoneOutlines?.[zone] ?? []
+    if (!anchor && outline.length < 3) return
+    const corners: [number, number][] = []
+    if (anchor) corners.push([anchor.minX, anchor.minY], [anchor.maxX, anchor.minY], [anchor.maxX, anchor.maxY], [anchor.minX, anchor.maxY])
+    corners.push(...outline)
+    map.fitBounds(L.latLngBounds(corners.map(([x, y]) => frameToLatLng(current, x, y, zone))), { padding: [80, 80], maxZoom: 18, animate: true })
+  }, [nonce, zone, map])
+  return null
+}
+
+function ZoneSketch({
+  meta,
+  zone,
+  draft,
+  enabled,
+  onAdd,
+}: {
+  meta: PlanMeta
+  zone: string | null
+  draft: [number, number][]
+  enabled: boolean
+  onAdd: (point: [number, number]) => void
+}) {
+  const map = useMap()
+  const onAddRef = useRef(onAdd)
+  const metaRef = useRef(meta)
+  const zoneRef = useRef(zone)
+  onAddRef.current = onAdd
+  metaRef.current = meta
+  zoneRef.current = zone
+
+  useEffect(() => {
+    if (!enabled) return
+    map.dragging.disable()
+    map.doubleClickZoom.disable()
+    const container = map.getContainer()
+    const previous = container.style.cursor
+    container.style.cursor = 'crosshair'
+    let start: { x: number; y: number } | null = null
+    const ignore = (event: Event) => Boolean((event.target as HTMLElement | null)?.closest('.map-controls, .leaflet-control'))
+    const down = (event: PointerEvent) => {
+      if (event.button !== 0 || ignore(event)) return
+      event.preventDefault()
+      event.stopPropagation()
+      start = { x: event.clientX, y: event.clientY }
+    }
+    const up = (event: PointerEvent) => {
+      if (!start || ignore(event)) {
+        start = null
+        return
+      }
+      const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y)
+      start = null
+      if (moved > 6) return
+      event.preventDefault()
+      event.stopPropagation()
+      const name = zoneRef.current
+      if (!name) return
+      const latlng = map.mouseEventToLatLng(event)
+      const [x, y] = latLngToFrame(metaRef.current, latlng.lat, latlng.lng, name)
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return
+      onAddRef.current([x, y])
+    }
+    container.addEventListener('pointerdown', down, true)
+    container.addEventListener('pointerup', up, true)
+    return () => {
+      container.removeEventListener('pointerdown', down, true)
+      container.removeEventListener('pointerup', up, true)
+      container.style.cursor = previous
+      map.dragging.enable()
+      map.doubleClickZoom.enable()
+    }
+  }, [enabled, map])
+
+  const outlines = Object.entries(meta.zoneOutlines ?? {}).filter((entry) => entry[1].length >= 3)
+  return (
+    <>
+      {outlines.map(([name, ring]) => (
+        <ZonePolygon
+          key={name}
+          positions={ring.map(([x, y]) => frameToLatLng(meta, x, y, name))}
+          pathOptions={{
+            pane: 'selectPane',
+            color: name === zone ? '#7c3aed' : '#64748b',
+            weight: name === zone ? 3 : 2,
+            dashArray: name === zone ? undefined : '6 6',
+            fillColor: name === zone ? '#7c3aed' : '#64748b',
+            fillOpacity: 0.08,
+            interactive: false,
+          }}
+        />
+      ))}
+      {zone && draft.length >= 3 && (
+        <ZonePolygon
+          positions={draft.map(([x, y]) => frameToLatLng(meta, x, y, zone))}
+          pathOptions={{ pane: 'selectPane', color: '#ea580c', weight: 3, fillColor: '#ea580c', fillOpacity: 0.16, interactive: false }}
+        />
+      )}
+      {zone && draft.length === 2 && (
+        <Polyline
+          positions={draft.map(([x, y]) => frameToLatLng(meta, x, y, zone))}
+          pathOptions={{ pane: 'selectPane', color: '#ea580c', weight: 3, interactive: false }}
+        />
+      )}
+      {zone &&
+        draft.map((point, index) => (
+          <CircleMarker
+            key={`${index}:${point[0]}:${point[1]}`}
+            center={frameToLatLng(meta, point[0], point[1], zone)}
+            radius={5}
+            pathOptions={{ pane: 'selectPane', color: '#ea580c', weight: 2, fillColor: '#fff', fillOpacity: 1, interactive: false }}
+          />
+        ))}
+    </>
+  )
+}
+
 export default function SabanDemoMap({
   meta,
   lots,
@@ -442,8 +662,15 @@ export default function SabanDemoMap({
   unlocked,
   dragLayer,
   hideLots,
+  alignZone,
+  focusZone,
+  focusZoneNonce,
   onDrag,
   onDragEnd,
+  sketching,
+  sketchZone,
+  draft,
+  onSketch,
 }: Props) {
   const mapRef = useRef<L.Map | null>(null)
   const dragRef = useRef(dragLayer)
@@ -484,13 +711,37 @@ export default function SabanDemoMap({
         id: lot.id,
         status: demoStatus(lot.code),
         zone: lot.zone,
+        ring: lot.ring,
       },
-      geometry: { type: 'Polygon', coordinates: [closedRing(meta, lot.ring)] },
+      geometry: { type: 'Polygon', coordinates: [closedRing(meta, lot.ring, lot.zone)] },
     }))
     return { type: 'FeatureCollection', features }
   }, [lots, meta])
 
-  const paintKey = `${active.join(',')}|${zone}`
+  const geoRef = useRef<L.GeoJSON | null>(null)
+  useEffect(() => {
+    const group = geoRef.current
+    if (!group) return
+    group.eachLayer((layer) => {
+      const polygon = layer as L.Polygon & { feature?: Feature<Polygon> }
+      const ring = polygon.feature?.properties?.ring as [number, number][] | undefined
+      const lotZone = polygon.feature?.properties?.zone as string | undefined
+      if (!ring || lotZone === undefined) return
+      polygon.setLatLngs(ring.map(([x, y]) => frameToLatLng(meta, x, y, lotZone)))
+    })
+  }, [meta])
+  const membership = useMemo(() => {
+    let hash = 2166136261
+    for (const lot of lots) {
+      for (let i = 0; i < lot.zone.length; i++) {
+        hash ^= lot.zone.charCodeAt(i)
+        hash = Math.imul(hash, 16777619)
+      }
+      hash = Math.imul(hash ^ 31, 16777619)
+    }
+    return (hash >>> 0).toString(16)
+  }, [lots])
+  const paintKey = `${active.join(',')}|${zone}|${membership}`
 
   return (
     <MapContainer
@@ -512,10 +763,12 @@ export default function SabanDemoMap({
       <MapPanes />
       <LockView bounds={bounds} free={unlocked} />
       <LotVisibility hidden={hideLots} />
-      <AlignGesture enabled={dragLayer} onMove={onDrag} onEnd={onDragEnd} />
+      <AlignGesture enabled={dragLayer && !sketching} onMove={onDrag} onEnd={onDragEnd} />
       <ZoomBridge onReady={(map) => (mapRef.current = map)} />
       <FlyTo lot={selected} meta={meta} nonce={focusNonce} />
+      <FlyToZone zone={focusZone} meta={meta} nonce={focusZoneNonce} />
       <GeoJSON
+        ref={geoRef}
         key={paintKey}
         pane="lotPane"
         data={collection}
@@ -523,16 +776,17 @@ export default function SabanDemoMap({
           const status = feature?.properties?.status as SaleStatus
           const lotZone = feature?.properties?.zone as string
           const lit = active.includes(status) && (zone === 'all' || lotZone === zone)
+          const quiet = alignZone != null && lotZone !== alignZone
           return {
             renderer,
             stroke: true,
             color: IDLE_LOT.stroke,
             weight: 2,
-            opacity: 1,
+            opacity: quiet ? 0.35 : 1,
             lineJoin: 'round',
             fill: true,
             fillColor: lit ? STATUS_META[status].color : IDLE_LOT.fill,
-            fillOpacity: 1,
+            fillOpacity: quiet ? 0.28 : 1,
           }
         }}
         onEachFeature={(feature, layer) => {
@@ -544,15 +798,16 @@ export default function SabanDemoMap({
         }}
       />
       <PlanImage meta={preview} opacity={opacity} />
+      {unlocked && <ZoneSketch meta={meta} zone={sketchZone} draft={draft} enabled={sketching} onAdd={onSketch} />}
       {selected && (
         <Polyline
-          positions={[...selected.ring, selected.ring[0]].map(([x, y]) => frameToLatLng(meta, x, y))}
+          positions={[...selected.ring, selected.ring[0]].map(([x, y]) => frameToLatLng(meta, x, y, selected.zone))}
           pathOptions={{ pane: 'selectPane', color: '#111827', weight: 2, interactive: false }}
         />
       )}
       {selected && (
         <Popup
-          position={frameToLatLng(meta, selected.x, selected.y)}
+          position={frameToLatLng(meta, selected.x, selected.y, selected.zone)}
           offset={[0, -8]}
           autoPan={false}
           closeButton={false}
@@ -574,7 +829,7 @@ export default function SabanDemoMap({
             <dl>
               <div>
                 <dt>Phân khu</dt>
-                <dd>{selected.zone}</dd>
+                <dd>{selected.zone || '—'}</dd>
               </div>
               <div>
                 <dt>Diện tích</dt>

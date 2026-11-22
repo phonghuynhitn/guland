@@ -1,6 +1,17 @@
 import { useEffect } from 'react'
 
 type Props = {
+  zones: string[]
+  target: string
+  onTarget: (value: string) => void
+  drawing: boolean
+  draftCount: number
+  hasOutline: boolean
+  onDraw: () => void
+  onFinish: () => void
+  onUndo: () => void
+  onCancelDraw: () => void
+  onClearOutline: () => void
   dragLayer: boolean
   onDragLayer: (value: boolean) => void
   opacity: number
@@ -28,6 +39,17 @@ type Props = {
 const STEPS = [1, 5, 20]
 
 export default function AlignPanel({
+  zones,
+  target,
+  onTarget,
+  drawing,
+  draftCount,
+  hasOutline,
+  onDraw,
+  onFinish,
+  onUndo,
+  onCancelDraw,
+  onClearOutline,
   dragLayer,
   onDragLayer,
   opacity,
@@ -53,8 +75,16 @@ export default function AlignPanel({
 }: Props) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement
-      if (target.closest('input, select, textarea')) return
+      const field = event.target as HTMLElement
+      if (field.closest('input, select, textarea')) return
+      if (drawing) {
+        if (event.key === 'Enter' && draftCount >= 3) onFinish()
+        else if (event.key === 'Escape') onCancelDraw()
+        else if (event.key === 'Backspace') onUndo()
+        else return
+        event.preventDefault()
+        return
+      }
       if (event.key === 'ArrowUp') onNudge(0, step)
       else if (event.key === 'ArrowDown') onNudge(0, -step)
       else if (event.key === 'ArrowLeft') onNudge(-step, 0)
@@ -64,14 +94,62 @@ export default function AlignPanel({
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onNudge, step])
+  }, [drawing, draftCount, onCancelDraw, onFinish, onNudge, onUndo, step])
 
   return (
     <aside className="align-panel">
       <h2>Căn chỉnh lớp lô</h2>
+      <label className="field">
+        Đang căn
+        <select value={target} onChange={(event) => onTarget(event.target.value)} aria-label="Phân khu cần căn">
+          <option value="all">Cả dự án</option>
+          {zones.map((zone) => (
+            <option key={zone} value={zone}>
+              {zone}
+            </option>
+          ))}
+        </select>
+      </label>
       <p className="hint">
-        Bản vẽ hẹp hơn mặt đất. Khớp một mép thì mép kia bị hụt — tăng Ngang, đừng chỉ phóng Tỷ lệ.
+        {target === 'all'
+          ? 'Bản vẽ hẹp hơn mặt đất. Khớp một mép thì mép kia bị hụt — chọn từng phân khu để căn riêng.'
+          : 'Lô có tâm nằm trong ranh thuộc phân khu này. Nền và tiện ích trong ranh chỉ tách ra khi phân khu đang lệch, rồi đi theo.'}
       </p>
+      {target !== 'all' && (
+        <>
+          <div className="tune">
+            {drawing ? (
+              <>
+                <button type="button" className="on" onClick={onFinish} disabled={draftCount < 3}>
+                  Xong
+                </button>
+                <button type="button" onClick={onUndo} disabled={draftCount === 0}>
+                  Xóa điểm
+                </button>
+                <button type="button" onClick={onCancelDraw}>
+                  Hủy
+                </button>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={onDraw}>
+                  Vẽ ranh
+                </button>
+                <button type="button" onClick={onClearOutline} disabled={!hasOutline}>
+                  Xóa ranh
+                </button>
+              </>
+            )}
+          </div>
+          <p className="hint">
+            {drawing
+              ? `Đã ${draftCount} điểm. Bấm bao hết lô và tiện ích, rồi bấm Xong.`
+              : hasOutline
+                ? 'Đã có ranh. Mọi lô trong ranh đi theo phân khu này. Ảnh trong ranh đi theo khi phân khu lệch.'
+                : 'Chưa có ranh. Vẽ bao các lô và tiện ích. Lô trong ranh sẽ thuộc phân khu này.'}
+          </p>
+        </>
+      )}
       <div className="seg">
         <button type="button" className={dragLayer ? 'on' : ''} onClick={() => onDragLayer(true)}>
           Kéo lớp lô
@@ -166,7 +244,7 @@ export default function AlignPanel({
         </button>
       </div>
       <p className="readout">
-        Đông {east.toFixed(1)} m · Bắc {north.toFixed(1)} m
+        {target === 'all' ? 'Đông' : 'Thêm đông'} {east.toFixed(1)} m · {target === 'all' ? 'Bắc' : 'thêm bắc'} {north.toFixed(1)} m
         <br />
         Tỷ lệ ×{scale.toFixed(3)} · Ngang ×{scaleAcross.toFixed(3)} · Dài ×{scaleAlong.toFixed(3)}
         <br />
@@ -185,7 +263,7 @@ export default function AlignPanel({
           {copied ? 'Đã chép' : 'Sao chép thông số'}
         </button>
       </div>
-      <p className="hint">Lưu cấu hình ghi vào trang. Chưa lưu thì vẫn nhớ trên máy này. Đang kéo lớp lô thì chưa bấm được từng lô.</p>
+      <p className="hint">Đưa về gốc xóa căn của mục đang chọn, không xóa ranh. Lưu ghi vào trang. Chưa lưu thì vẫn nhớ trên máy này.</p>
     </aside>
   )
 }

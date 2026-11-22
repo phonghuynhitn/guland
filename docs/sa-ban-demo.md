@@ -116,7 +116,7 @@ Canvas nằm trên ảnh nên màu lô che mặt bằng và vệ tinh. Lô khôn
 
 Khi Leaflet đang animate zoom (`zoomanim`), góc được tính bằng `_latLngToNewLayerPoint` theo zoom và tâm mới. Trong lúc đó, handler `move` / `zoom` bỏ qua (`_animatingZoom`), kẻo ảnh nhảy một nhịp rồi mới khớp. Hết animation thì đặt lại theo view đã đứng yên.
 
-Đổi căn chỉnh chỉ gọi lại hàm đặt ảnh. Không tạo lại thẻ `img`.
+Đổi căn chỉnh chỉ gọi lại hàm đặt ảnh. Ảnh gốc không bị cắt thành nhiều file. Khi một phân khu đã có ranh và đang lệch, cùng file đó được gắn thêm một lần nữa, cắt đúng theo ranh, và đặt theo căn của phân khu. Đưa phân khu về gốc thì chỉ còn một ảnh.
 
 ---
 
@@ -168,25 +168,31 @@ Chọn một dòng tăng `focusNonce` để bay tới lô đó. Bấm lại lô 
 
 Bật bằng nút **Căn chỉnh**. `ALIGN_ENABLED` trong `SabanDemoApp.tsx` đang là `true`.
 
-Trong lúc kéo, lớp lô ẩn (`lotPane` opacity 0) để nhìn ảnh và vệ tinh. Thả chuột thì ghi lại vị trí. Có hai chế độ: kéo lớp lô, hoặc kéo bản đồ. Mũi tên dịch theo bước 1, 5 hoặc 20 mét.
+Mục **Đang căn** chọn **Cả dự án** hoặc một phân khu. Cả dự án dùng một phép chiếu chung. Từng phân khu thêm một chỉnh quanh tâm khu đó: dịch, tỷ lệ, ngang, dài, xoay. Lô khu khác không đi theo.
 
-Các núm còn lại:
+**Vẽ ranh** để tự khoanh phân khu. Bấm các điểm bao hết lô và tiện ích, rồi **Xong**. Lô có tâm nằm trong ranh thuộc phân khu đó. Ranh nhỏ hơn được ưu tiên khi chồng nhau. Ảnh nền vẫn là một file nguyên. Chỉ khi phân khu đã có ranh và đang lệch so với cả dự án, phần ảnh trong ranh mới được cắt theo đúng ranh và đi theo phân khu. Đưa phân khu về gốc thì ảnh liền lại. **Xóa ranh** trả lô về phân khu trong dữ liệu.
 
-- **Tỷ lệ** đổi `metersPerPixel` (phóng đều)
+Trong lúc kéo cả dự án, lớp lô ẩn để nhìn ảnh và vệ tinh. Kéo một phân khu thì lô trong ranh và ảnh trong ranh đi theo tay, các khu khác mờ. Có hai chế độ: kéo lớp lô, hoặc kéo bản đồ. Mũi tên dịch theo bước 1, 5 hoặc 20 mét. Đang vẽ ranh thì Enter để xong, Backspace xóa điểm, Escape để hủy.
+
+Các núm còn lại áp vào mục đang chọn:
+
+- **Tỷ lệ** đổi `metersPerPixel` của cả dự án, hoặc hệ số phóng quanh tâm phân khu
 - **Ngang** đổi `scaleAcross`
 - **Dọc** đổi `scaleAlong`
 - **Xoay** cộng độ vào `rotation`
 
-Bản nháp đang kéo nằm ở `live`. Lô và vùng khóa dùng cấu hình đã thả (`align`). Ảnh nền dùng `live` nếu đang kéo, nên ảnh đi theo tay.
+**Đưa về gốc** chỉ xóa căn của mục đang chọn, không xóa ranh.
+
+Bản nháp kéo cả dự án nằm ở `live`: ảnh đi theo tay, lô cập nhật khi thả. Kéo một phân khu thì lô và mảnh ảnh của khu đó dùng `liveZone` ngay trong lúc kéo.
 
 Hai nơi lưu:
 
-- `localStorage` khóa `saban-demo-align`, áp ngay trên trình duyệt
+- `localStorage` khóa `saban-demo-align`, gồm căn cả dự án, `zones` và `outlines`
 - **Lưu cấu hình** gửi `POST /api/saban-demo-align`
 
-Plugin `sabanAlignSave` trong `vite.config.ts` chỉ chạy lúc dev. Middleware kiểm tra `req.url` (không gắn path, vì bản gắn path trả 404), kiểm tra số hữu hạn và khoảng cho phép, rồi ghi đè `center`, `metersPerPixel`, `rotation`, `scaleAcross`, `scaleAlong` trong `meta.json`. **Đưa về gốc** xóa `localStorage` và trở về số trong file.
+Plugin `sabanAlignSave` ghi `center`, `metersPerPixel`, `rotation`, `scaleAcross`, `scaleAlong`, `zoneTweaks` và `zoneOutlines`. Ranh là 3 đến 400 điểm pixel khung, mỗi tọa độ trong ±20000.
 
-Giới hạn lúc lưu: mét/pixel trong (0,3; 20), xoay trong ±20°, hai scale trong (0,5; 2).
+Giới hạn lúc lưu: mét/pixel trong (0,3; 20), xoay cả dự án trong ±20°, hai scale trong (0,5; 2). Mỗi phân khu: dịch trong ±2000 m, tỷ lệ và hai scale trong [0,5; 2], xoay trong ±30°.
 
 ---
 
