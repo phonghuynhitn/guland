@@ -332,6 +332,30 @@ body,
   margin-top: 12px;
 }
 
+.align-panel select {
+  width: 100%;
+  height: 36px;
+  margin-top: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  background: #fff;
+}
+
+.tune button.on,
+.tune button.on:hover {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
+
+.tune button:disabled,
+.tune button:disabled:hover {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .align-panel input[type='range'] {
   width: 100%;
 }

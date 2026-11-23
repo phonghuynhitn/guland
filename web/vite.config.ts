@@ -26,6 +26,15 @@ function sabanAlignSave(root: string): Plugin {
               rotation?: number
               scaleAcross?: number
               scaleAlong?: number
+              zoneTweaks?: Record<string, {
+                east?: number
+                north?: number
+                scale?: number
+                rotation?: number
+                scaleAcross?: number
+                scaleAlong?: number
+              }>
+              zoneOutlines?: Record<string, unknown>
             }
             const lat = body.center?.lat
             const lng = body.center?.lng
@@ -48,12 +57,77 @@ function sabanAlignSave(root: string): Plugin {
               res.end('invalid')
               return
             }
-            const meta = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>
+            const meta = JSON.parse(readFileSync(file, 'utf8')) as { zones?: string[] } & Record<string, unknown>
+            const names = new Set(meta.zones ?? [])
+            const zoneTweaks: Record<string, { east: number; north: number; scale: number; rotation: number; scaleAcross: number; scaleAlong: number }> = {}
+            for (const [name, tweak] of Object.entries(body.zoneTweaks ?? {})) {
+              if (!names.has(name) || !tweak) {
+                res.statusCode = 400
+                res.end('invalid')
+                return
+              }
+              const east = tweak.east ?? 0
+              const north = tweak.north ?? 0
+              const scale = tweak.scale ?? 1
+              const zoneRotation = tweak.rotation ?? 0
+              const zoneAcross = tweak.scaleAcross ?? 1
+              const zoneAlong = tweak.scaleAlong ?? 1
+              const zoneNumbers = [east, north, scale, zoneRotation, zoneAcross, zoneAlong]
+              const zoneValid =
+                zoneNumbers.every((value) => Number.isFinite(value)) &&
+                Math.abs(east) <= 2000 &&
+                Math.abs(north) <= 2000 &&
+                scale >= 0.5 &&
+                scale <= 2 &&
+                Math.abs(zoneRotation) <= 30 &&
+                zoneAcross >= 0.5 &&
+                zoneAcross <= 2 &&
+                zoneAlong >= 0.5 &&
+                zoneAlong <= 2
+              if (!zoneValid) {
+                res.statusCode = 400
+                res.end('invalid')
+                return
+              }
+              zoneTweaks[name] = { east, north, scale, rotation: zoneRotation, scaleAcross: zoneAcross, scaleAlong: zoneAlong }
+            }
+            const zoneOutlines: Record<string, [number, number][]> = {}
+            if (body.zoneOutlines != null && (typeof body.zoneOutlines !== 'object' || Array.isArray(body.zoneOutlines))) {
+              res.statusCode = 400
+              res.end('invalid')
+              return
+            }
+            for (const [name, ring] of Object.entries(body.zoneOutlines ?? {})) {
+              if (!names.has(name) || !Array.isArray(ring) || ring.length < 3 || ring.length > 400) {
+                res.statusCode = 400
+                res.end('invalid')
+                return
+              }
+              const points: [number, number][] = []
+              for (const point of ring) {
+                if (!Array.isArray(point) || point.length < 2) {
+                  res.statusCode = 400
+                  res.end('invalid')
+                  return
+                }
+                const px = Number(point[0])
+                const py = Number(point[1])
+                if (!Number.isFinite(px) || !Number.isFinite(py) || Math.abs(px) > 20000 || Math.abs(py) > 20000) {
+                  res.statusCode = 400
+                  res.end('invalid')
+                  return
+                }
+                points.push([px, py])
+              }
+              zoneOutlines[name] = points
+            }
             meta.center = { lat, lng }
             meta.metersPerPixel = metersPerPixel
             meta.rotation = rotation
             meta.scaleAcross = scaleAcross
             meta.scaleAlong = scaleAlong
+            meta.zoneTweaks = zoneTweaks
+            meta.zoneOutlines = zoneOutlines
             writeFileSync(file, `${JSON.stringify(meta, null, 2)}\n`)
             res.setHeader('content-type', 'application/json')
             res.end(JSON.stringify({ ok: true }))

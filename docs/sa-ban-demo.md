@@ -24,7 +24,7 @@ Vite 8 cần Node 22. Node 21 làm trang không lên.
 3. Xuất từng lô thành polygon trong hệ pixel của frame, không gán lat/lng riêng cho từng lô. File `web/public/data/saban-demo/lots.json` có 5.396 lô.
 4. Ghim cả frame lên một điểm EPSG:3857 bằng tâm, mét/pixel, góc xoay và hai hệ số kéo. Công thức nằm ở `frameToLatLng` trong `web/src/saban-demo/model.ts`.
 5. Khóa camera trong khung dự án: zoom vào được, kéo và thu nhỏ không ra khỏi mặt bằng.
-6. Vẽ lô bằng canvas Leaflet. Nhóm trạng thái chưa tích thì trong suốt. Nhóm đã tích thì tô đặc, viền trắng, và vẽ lại mã lô lên lớp màu.
+6. Vẽ lô bằng canvas Leaflet. Mọi lô luôn có polygon. Nhóm trạng thái chưa tích thì tô be nhạt và viền trắng. Nhóm đã tích thì tô đặc, viền trắng, và vẽ lại mã lô lên lớp màu.
 7. Thêm panel tìm mã lô, lọc phân khu và năm trạng thái. Một mã khớp thì bay tới lô. Nhiều lô cùng mã thì liệt kê.
 8. Thêm chế độ căn chỉnh tay (kéo, tỷ lệ, ngang, dọc, xoay) và nút lưu cấu hình vào `meta.json` khi đang chạy `pnpm dev`.
 9. Nền mặc định là vệ tinh Google. Nút góc bản đồ đổi sang bản đồ đường Esri.
@@ -103,7 +103,7 @@ Pane Leaflet, từ dưới lên:
 | `selectPane` | 560 | Viền đen của lô đang chọn |
 | popup | 700 | Thẻ thông tin lô |
 
-Canvas nằm trên ảnh nên màu lọc che mặt bằng và vệ tinh. Lô không thuộc nhóm đang lọc có `fillOpacity` 0 và không viền, nên ảnh số lô bên dưới vẫn hiện.
+Canvas nằm trên ảnh nên màu lô che mặt bằng và vệ tinh. Lô không thuộc nhóm đang lọc vẫn được vẽ: tô be nhạt `#C5B893`, viền trắng 2 px. Ảnh mặt bằng chỉ còn lộ ở khoảng trống giữa các lô.
 
 ---
 
@@ -116,7 +116,7 @@ Canvas nằm trên ảnh nên màu lọc che mặt bằng và vệ tinh. Lô kh�
 
 Khi Leaflet đang animate zoom (`zoomanim`), góc được tính bằng `_latLngToNewLayerPoint` theo zoom và tâm mới. Trong lúc đó, handler `move` / `zoom` bỏ qua (`_animatingZoom`), kẻo ảnh nhảy một nhịp rồi mới khớp. Hết animation thì đặt lại theo view đã đứng yên.
 
-Đổi căn chỉnh chỉ gọi lại hàm đặt ảnh. Không tạo lại thẻ `img`.
+Đổi căn chỉnh chỉ gọi lại hàm đặt ảnh. Ảnh gốc không bị cắt thành nhiều file. Khi một phân khu đã có ranh và đang lệch, cùng file đó được gắn thêm một lần nữa, cắt đúng theo ranh, và đặt theo căn của phân khu. Đưa phân khu về gốc thì chỉ còn một ảnh.
 
 ---
 
@@ -134,7 +134,7 @@ Trạng thái không gọi API bán hàng. `demoStatus` băm mã lô (FNV-1a, of
 
 Với bộ dữ liệu hiện tại, số lô theo trạng thái là 1.095 / 1.070 / 1.049 / 1.074 / 1.108. Đổi mã hoặc thêm lô thì số đếm đổi theo, vì panel đếm lại từ `demoStatus`.
 
-Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Nhóm tắt: không tô, không viền.
+Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Nhóm tắt, hoặc lô ngoài phân khu đang chọn: vẫn tô đặc be nhạt `#C5B893`, viền trắng 2 px. Mã lô vẽ trên cả hai nền. Chữ trên nền be là `#3d2914`, có viền trắng 1 px.
 
 Mã lô trên lớp màu không phải marker DOM. Sau mỗi `_redraw` của canvas, `paintLotCodes` vẽ chữ vào cùng context:
 
@@ -144,7 +144,7 @@ Mã lô trên lớp màu không phải marker DOM. Sau mỗi `_redraw` của can
 - bỏ qua lô khi cạnh dài dưới 16 px, cạnh ngắn dưới 8 px, hoặc chữ nhỏ hơn khoảng 6,5 px
 - chữ trắng trên nền giữ chỗ, đặt cọc, ký HĐCN; chữ `#1c1c1c` kèm viền trắng 1 px trên nền còn trống và thanh lý
 
-Vẽ lại một vùng thì chỉ vẽ những mã có neo nằm trong vùng đó, nới thêm 48 px. Vẽ lại toàn canvas thì vẽ hết mã đang lọc.
+Vẽ lại một vùng thì chỉ vẽ những mã có neo nằm trong vùng đó, nới thêm 48 px. Vẽ lại toàn canvas thì vẽ hết mã đang thấy được.
 
 Renderer được tạo một lần (`useMemo` rỗng) và đọc trạng thái lọc qua ref. Đổi hàm vẽ chữ thì cần tải lại trang; hot reload không thay closure cũ.
 
@@ -168,25 +168,31 @@ Chọn một dòng tăng `focusNonce` để bay tới lô đó. Bấm lại lô 
 
 Bật bằng nút **Căn chỉnh**. `ALIGN_ENABLED` trong `SabanDemoApp.tsx` đang là `true`.
 
-Trong lúc kéo, lớp lô ẩn (`lotPane` opacity 0) để nhìn ảnh và vệ tinh. Thả chuột thì ghi lại vị trí. Có hai chế độ: kéo lớp lô, hoặc kéo bản đồ. Mũi tên dịch theo bước 1, 5 hoặc 20 mét.
+Mục **Đang căn** chọn **Cả dự án** hoặc một phân khu. Cả dự án dùng một phép chiếu chung. Từng phân khu thêm một chỉnh quanh tâm khu đó: dịch, tỷ lệ, ngang, dài, xoay. Lô khu khác không đi theo.
 
-Các núm còn lại:
+**Vẽ ranh** để tự khoanh phân khu. Bấm các điểm bao hết lô và tiện ích, rồi **Xong**. Lô có tâm nằm trong ranh thuộc phân khu đó. Ranh nhỏ hơn được ưu tiên khi chồng nhau. Ảnh nền vẫn là một file nguyên. Chỉ khi phân khu đã có ranh và đang lệch so với cả dự án, phần ảnh trong ranh mới được cắt theo đúng ranh và đi theo phân khu. Đưa phân khu về gốc thì ảnh liền lại. **Xóa ranh** trả lô về phân khu trong dữ liệu.
 
-- **Tỷ lệ** đổi `metersPerPixel` (phóng đều)
+Trong lúc kéo cả dự án, lớp lô ẩn để nhìn ảnh và vệ tinh. Kéo một phân khu thì lô trong ranh và ảnh trong ranh đi theo tay, các khu khác mờ. Có hai chế độ: kéo lớp lô, hoặc kéo bản đồ. Mũi tên dịch theo bước 1, 5 hoặc 20 mét. Đang vẽ ranh thì Enter để xong, Backspace xóa điểm, Escape để hủy.
+
+Các núm còn lại áp vào mục đang chọn:
+
+- **Tỷ lệ** đổi `metersPerPixel` của cả dự án, hoặc hệ số phóng quanh tâm phân khu
 - **Ngang** đổi `scaleAcross`
 - **Dọc** đổi `scaleAlong`
 - **Xoay** cộng độ vào `rotation`
 
-Bản nháp đang kéo nằm ở `live`. Lô và vùng khóa dùng cấu hình đã thả (`align`). Ảnh nền dùng `live` nếu đang kéo, nên ảnh đi theo tay.
+**Đưa về gốc** chỉ xóa căn của mục đang chọn, không xóa ranh.
+
+Bản nháp kéo cả dự án nằm ở `live`: ảnh đi theo tay, lô cập nhật khi thả. Kéo một phân khu thì lô và mảnh ảnh của khu đó dùng `liveZone` ngay trong lúc kéo.
 
 Hai nơi lưu:
 
-- `localStorage` khóa `saban-demo-align`, áp ngay trên trình duyệt
+- `localStorage` khóa `saban-demo-align`, gồm căn cả dự án, `zones` và `outlines`
 - **Lưu cấu hình** gửi `POST /api/saban-demo-align`
 
-Plugin `sabanAlignSave` trong `vite.config.ts` chỉ chạy lúc dev. Middleware kiểm tra `req.url` (không gắn path, vì bản gắn path trả 404), kiểm tra số hữu hạn và khoảng cho phép, rồi ghi đè `center`, `metersPerPixel`, `rotation`, `scaleAcross`, `scaleAlong` trong `meta.json`. **Đưa về gốc** xóa `localStorage` và trở về số trong file.
+Plugin `sabanAlignSave` ghi `center`, `metersPerPixel`, `rotation`, `scaleAcross`, `scaleAlong`, `zoneTweaks` và `zoneOutlines`. Ranh là 3 đến 400 điểm pixel khung, mỗi tọa độ trong ±20000.
 
-Giới hạn lúc lưu: mét/pixel trong (0,3; 20), xoay trong ±20°, hai scale trong (0,5; 2).
+Giới hạn lúc lưu: mét/pixel trong (0,3; 20), xoay cả dự án trong ±20°, hai scale trong (0,5; 2). Mỗi phân khu: dịch trong ±2000 m, tỷ lệ và hai scale trong [0,5; 2], xoay trong ±30°.
 
 ---
 
@@ -223,6 +229,6 @@ Lớp giao thông không khai báo `subdomains`. Leaflet vẫn gọi `_getSubdom
 
 - Trạng thái là hàm băm của mã, không phải tình trạng bán thật.
 - Diện tích, hướng, đơn giá và thành tiền chưa có nguồn, nên popup để `—`.
-- Số trên ảnh là số in trong `overlay-labels.webp`. Số trên lớp màu chỉ hiện khi nhóm trạng thái đang bật và lô đủ lớn trên màn hình.
+- Số trên ảnh là số in trong `overlay-labels.webp`, bị lớp lô che. Số trên lớp màu hiện khi lô đủ lớn trên màn hình, kể cả lúc chưa lọc.
 - API lưu căn chỉnh chỉ có khi chạy Vite dev. Bản build tĩnh không ghi được `meta.json`.
 - Khóa camera theo khung frame đã chiếu. Xoay hoặc kéo mạnh lúc căn chỉnh có thể để một phần dự án sát mép vùng khóa.

@@ -97,7 +97,7 @@ export default function Panel({
                     <button type="button" className={lot.id === selectedId ? 'on' : ''} onClick={() => onSelect(lot.id)}>
                       <strong>{lot.code}</strong>
                       <small>
-                        {khuOf(lot.code)} · {lot.zone}
+                        {khuOf(lot.code)} · {lot.zone || '—'}
                       </small>
                     </button>
                   </li>
