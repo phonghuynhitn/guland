@@ -474,6 +474,23 @@ export default function SabanDemoMap({
     if (unlocked) map.keyboard.disable()
     else map.keyboard.enable()
   }, [unlocked])
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || active.length > 0) return
+    const apply = () => {
+      const weight = map.getZoom() >= 17 ? 1 : 0
+      map.eachLayer((layer) => {
+        const path = layer as L.Path & { feature?: Feature }
+        if (!path.feature || typeof path.setStyle !== 'function') return
+        path.setStyle({ stroke: weight > 0, color: '#ffffff', weight, opacity: weight > 0 ? 1 : 0 })
+      })
+    }
+    apply()
+    map.on('zoomend', apply)
+    return () => {
+      map.off('zoomend', apply)
+    }
+  }, [active, zone])
   const tile = TILES[base]
   const selected = lots.find((lot) => lot.id === selectedId) ?? null
 
@@ -526,10 +543,10 @@ export default function SabanDemoMap({
           const lit = (zone === 'all' || lotZone === zone) && (idle || active.includes(status))
           return {
             renderer,
-            stroke: lit,
+            stroke: lit && !idle,
             color: '#ffffff',
-            weight: lit ? 2 : 0,
-            opacity: lit ? 1 : 0,
+            weight: lit && !idle ? 1 : 0,
+            opacity: lit && !idle ? 1 : 0,
             lineJoin: 'round',
             fill: true,
             fillRule: 'nonzero',
