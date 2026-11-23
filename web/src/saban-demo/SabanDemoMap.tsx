@@ -786,7 +786,7 @@ export default function SabanDemoMap({
             lineJoin: 'round',
             fill: true,
             fillColor: lit ? STATUS_META[status].color : IDLE_LOT.fill,
-            fillOpacity: quiet ? 0.28 : 1,
+            fillOpacity: quiet ? 0.28 : lit || base !== 'satellite' ? 1 : 0.72,
           }
         }}
         onEachFeature={(feature, layer) => {

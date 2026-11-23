@@ -118,6 +118,8 @@ Khi Leaflet đang animate zoom (`zoomanim`), góc được tính bằng `_latLng
 
 Đổi căn chỉnh chỉ gọi lại hàm đặt ảnh. Ảnh gốc không bị cắt thành nhiều file. Khi một phân khu đã có ranh và đang lệch, cùng file đó được gắn thêm một lần nữa, cắt đúng theo ranh, và đặt theo căn của phân khu. Đưa phân khu về gốc thì chỉ còn một ảnh.
 
+Khi nền là vệ tinh, ảnh mặt bằng ở độ trong 0,72 để lộ vệ tinh ở lối đi và tiện ích. Lô vẫn tô đặc phía trên. Đang căn chỉnh thì thanh Độ trong điều khiển riêng, mặc định 0,55.
+
 ---
 
 ## 7. Tô trạng thái và số lô
@@ -134,7 +136,7 @@ Trạng thái không gọi API bán hàng. `demoStatus` băm mã lô (FNV-1a, of
 
 Với bộ dữ liệu hiện tại, số lô theo trạng thái là 1.095 / 1.070 / 1.049 / 1.074 / 1.108. Đổi mã hoặc thêm lô thì số đếm đổi theo, vì panel đếm lại từ `demoStatus`.
 
-Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Nhóm tắt, hoặc lô ngoài phân khu đang chọn: vẫn tô đặc be nhạt `#C5B893`, viền trắng 2 px. Mã lô vẽ trên cả hai nền. Chữ trên nền be là `#3d2914`, có viền trắng 1 px.
+Lô vẽ bằng một `L.canvas` chung, `padding` 0.5, gắn `lotPane`. Nhóm đang bật và đúng phân khu: tô đặc (`fillOpacity` 1), viền trắng 2 px, `lineJoin` round. Chưa lọc, trên nền vệ tinh: tô be nhạt `#C5B893` ở độ trong 0,72, viền trắng 2 px, để lộ vệ tinh. Trên bản đồ giao thông thì nền be vẫn đặc. Mã lô vẽ trên cả hai nền. Chữ trên nền be là `#3d2914`, có viền trắng 1 px.
 
 Mã lô trên lớp màu không phải marker DOM. Sau mỗi `_redraw` của canvas, `paintLotCodes` vẽ chữ vào cùng context:
 

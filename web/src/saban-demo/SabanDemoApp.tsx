@@ -345,7 +345,7 @@ export default function SabanDemoApp() {
           focusNonce={focusNonce}
           onSelect={choose}
           onToggleBase={() => setBase((value) => (value === 'satellite' ? 'streets' : 'satellite'))}
-          opacity={aligning ? opacity : 1}
+          opacity={aligning ? opacity : base === 'satellite' ? 0.72 : 1}
           unlocked={aligning}
           dragLayer={aligning && dragLayer}
           hideLots={target === TARGET_ALL && live !== null}
